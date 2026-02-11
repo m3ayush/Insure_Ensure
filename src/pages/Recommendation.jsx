@@ -101,18 +101,18 @@ export default function Recommendation() {
     <div className="min-h-screen bg-gray-50">
       <Navbar />
       <div className={`mx-auto px-4 py-10 sm:px-6 lg:px-8 ${currentStep === 5 ? "max-w-4xl" : "max-w-3xl"}`}>
-        <div className="relative">
+        <div className="flex justify-end mb-4">
           <button
             onClick={() => setShowHistory(true)}
-            className="absolute -top-2 right-0 flex items-center gap-1.5 text-sm text-indigo-600 hover:text-indigo-800 font-medium transition cursor-pointer z-20"
+            className="flex items-center gap-1.5 text-sm text-indigo-600 hover:text-indigo-800 font-medium transition cursor-pointer"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             History
           </button>
-          <ProgressBar currentStep={currentStep} />
         </div>
+        <ProgressBar currentStep={currentStep} />
 
         {currentStep === 1 && (
           <StepCommonDetails
