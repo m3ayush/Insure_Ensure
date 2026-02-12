@@ -1,7 +1,7 @@
 import { GoogleGenAI } from "@google/genai";
 import { KNOWLEDGE_BASE } from "../data/knowledgeBase.js";
 
-const EMBEDDING_MODEL = "text-embedding-004";
+const EMBEDDING_MODEL = "gemini-embedding-001";
 const GENERATION_MODEL = "gemini-2.5-flash";
 const SIMILARITY_THRESHOLD = 0.25;
 const TOP_K = 5;
@@ -32,6 +32,24 @@ RULES YOU MUST FOLLOW:
 
 // ── Helpers ──────────────────────────────────────────────────
 
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function withRetry(fn, maxRetries = 3) {
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      return await fn();
+    } catch (err) {
+      const isRateLimit = err.status === 429 || err.message?.includes("429");
+      if (!isRateLimit || attempt === maxRetries) throw err;
+      const delay = Math.min(2000 * 2 ** attempt, 30000);
+      console.log(`[RAG] Rate limited, retrying in ${delay}ms (attempt ${attempt + 1}/${maxRetries})`);
+      await sleep(delay);
+    }
+  }
+}
+
 function l2Normalize(vector) {
   let norm = 0;
   for (let i = 0; i < vector.length; i++) norm += vector[i] * vector[i];
@@ -50,16 +68,18 @@ function dotProduct(a, b) {
 
 async function embedTexts(texts) {
   const vectors = [];
-  const batchSize = 20;
+  const batchSize = 10;
 
   for (let i = 0; i < texts.length; i += batchSize) {
     const batch = texts.slice(i, i + batchSize);
     const results = await Promise.all(
       batch.map((text) =>
-        ai.models.embedContent({
-          model: EMBEDDING_MODEL,
-          contents: text,
-        })
+        withRetry(() =>
+          ai.models.embedContent({
+            model: EMBEDDING_MODEL,
+            contents: text,
+          })
+        )
       )
     );
     for (const result of results) {
@@ -72,10 +92,12 @@ async function embedTexts(texts) {
 }
 
 async function embedSingle(text) {
-  const result = await ai.models.embedContent({
-    model: EMBEDDING_MODEL,
-    contents: text,
-  });
+  const result = await withRetry(() =>
+    ai.models.embedContent({
+      model: EMBEDDING_MODEL,
+      contents: text,
+    })
+  );
   return l2Normalize(result.embeddings[0].values);
 }
 
@@ -133,10 +155,13 @@ export async function handleChatQuery(message, conversationHistory) {
   const startTime = Date.now();
 
   // 1. Embed the query
+  console.log("[RAG] Embedding query:", message.slice(0, 60));
   const queryVector = await embedSingle(message);
+  console.log("[RAG] Query embedded, vector length:", queryVector.length);
 
   // 2. Retrieve relevant chunks
   const retrieved = retrieveContext(queryVector);
+  console.log("[RAG] Top scores:", retrieved.slice(0, 3).map((r) => `${r.chunk.topic}=${r.score.toFixed(3)}`).join(", "));
 
   // 3. Similarity threshold gate
   if (retrieved.length === 0 || retrieved[0].score < SIMILARITY_THRESHOLD) {
@@ -164,21 +189,24 @@ export async function handleChatQuery(message, conversationHistory) {
     .join("\n");
 
   // 6. Build full prompt
-  const userPrompt = `CONTEXT FROM KNOWLEDGE BASE:\n${contextText}\n\n${
-    historyText ? `CONVERSATION HISTORY:\n${historyText}\n\n` : ""
-  }USER QUESTION: ${message}`;
+  const userPrompt = `CONTEXT FROM KNOWLEDGE BASE:\n${contextText}\n\n${historyText ? `CONVERSATION HISTORY:\n${historyText}\n\n` : ""
+    }USER QUESTION: ${message}`;
 
   // 7. Generate response
   try {
-    const result = await ai.models.generateContent({
-      model: GENERATION_MODEL,
-      contents: userPrompt,
-      config: {
-        systemInstruction: SYSTEM_PROMPT,
-        temperature: 0.3,
-        maxOutputTokens: 1024,
-      },
-    });
+    console.log("[RAG] Calling Gemini", GENERATION_MODEL);
+    const result = await withRetry(() =>
+      ai.models.generateContent({
+        model: GENERATION_MODEL,
+        contents: userPrompt,
+        config: {
+          systemInstruction: SYSTEM_PROMPT,
+          temperature: 0.3,
+          maxOutputTokens: 1024,
+        },
+      })
+    );
+    console.log("[RAG] Gemini responded, text length:", result.text?.length ?? "null");
 
     const response = result.text || FALLBACK_RESPONSE;
     const sources = retrieved.map((r) => ({

@@ -16,24 +16,26 @@ async function listModels() {
   console.log("Listing available models...");
   try {
     const response = await ai.models.list();
-    // The response structure might vary slightly, so I'll log the raw output or map it
-    // Based on @google/genai docs, response.models is the array
-    if (response) {
-       console.log("Models found:", response);
+    console.log("Response type:", typeof response);
 
-       // Try to find embedding models specifically
-       const embeddingModels = response.filter(m => m.name.includes("embedding"));
-         if (embeddingModels.length > 0) {
-              console.log("Embedding models:", embeddingModels.map(m => m.name));
-         } else {
-             console.log("No embedding models found in list.");
-         }
+    // The new SDK returns an iterable response for list()
+    const models = [];
+    for await (const model of response) {
+      models.push(model);
+    }
+
+    console.log(`Found ${models.length} models.`);
+
+    const embeddingModels = models.filter(m => m.name.includes("embedding"));
+    if (embeddingModels.length > 0) {
+      console.log("Embedding models:", embeddingModels.map(m => m.name));
     } else {
-        console.log("Response format unexpected:", response);
+      console.log("No embedding models found.");
+      console.log("All models:", models.map(m => m.name));
     }
 
   } catch (error) {
-    console.error("Error listing models:", error.message);
+    console.error("Error listing models:", error);
   }
 }
 
@@ -45,6 +47,7 @@ async function testEmbedding(modelName) {
       contents: "Hello world",
     });
     console.log("Success! Embedding generated.");
+    console.log("Embedding length:", result.embeddings[0].values.length);
   } catch (error) {
     console.error(`Failed to embed with ${modelName}:`, error.message);
   }
@@ -52,9 +55,9 @@ async function testEmbedding(modelName) {
 
 async function run() {
   await listModels();
-  await testEmbedding("text-embedding-004");
-  await testEmbedding("models/text-embedding-004");
-  await testEmbedding("embedding-001");
+  // We will try to test whatever embedding models we find, plus the usual suspects
+  // But let's just stick to the specific ones for now
+  await testEmbedding("models/gemini-embedding-001");
 }
 
 run();
