@@ -3,6 +3,8 @@ import cors from "cors";
 import dotenv from "dotenv";
 import connectDB from "./config/db.js";
 import recommendationRoutes from "./routes/recommendation.js";
+import chatbotRoutes from "./routes/chatbot.js";
+import { initializeRAG } from "./services/ragService.js";
 
 dotenv.config();
 
@@ -14,7 +16,13 @@ app.use(express.json({ limit: "1mb" }));
 
 connectDB();
 
+// Initialize RAG service (non-blocking — server starts immediately)
+initializeRAG().catch((err) =>
+  console.error("RAG initialization failed:", err.message)
+);
+
 app.use("/api/recommendations", recommendationRoutes);
+app.use("/api/chatbot", chatbotRoutes);
 
 app.get("/api/health", (_req, res) => res.json({ status: "ok" }));
 

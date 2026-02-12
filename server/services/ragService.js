@@ -1,9 +1,8 @@
 import { GoogleGenAI } from "@google/genai";
 import { KNOWLEDGE_BASE } from "../data/knowledgeBase.js";
 
-const EMBEDDING_MODEL = "text-embedding-005";
+const EMBEDDING_MODEL = "text-embedding-004";
 const GENERATION_MODEL = "gemini-2.5-flash";
-const EMBEDDING_DIM = 768;
 const SIMILARITY_THRESHOLD = 0.25;
 const TOP_K = 5;
 
