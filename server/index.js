@@ -5,6 +5,7 @@ import connectDB from "./config/db.js";
 import recommendationRoutes from "./routes/recommendation.js";
 import chatbotRoutes from "./routes/chatbot.js";
 import documentChatRoutes from "./routes/documentChat.js";
+import reimbursementRoutes from "./routes/reimbursement.js";
 import { initializeRAG } from "./services/ragService.js";
 
 dotenv.config();
@@ -25,6 +26,7 @@ initializeRAG().catch((err) =>
 app.use("/api/recommendations", recommendationRoutes);
 app.use("/api/chatbot", chatbotRoutes);
 app.use("/api/document-chat", documentChatRoutes);
+app.use("/api/reimbursement", reimbursementRoutes);
 
 app.get("/api/health", (_req, res) => res.json({ status: "ok" }));
 
