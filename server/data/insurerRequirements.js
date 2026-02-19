@@ -64,6 +64,19 @@ export const INSURER_REQUIREMENTS = {
       { id: "mlc_fir", label: "MLC/FIR (in case of Accidents)", category: "supporting" },
     ],
   },
+  united_india: {
+    display_name: "United India Insurance",
+    aliases: ["united india", "united india insurance", "united india insurance company", "uiic"],
+    mandatory_docs: [
+      { id: "claim_form", label: "Claim Form (Duly Filled & Signed)", category: "mandatory" },
+      { id: "discharge_summary", label: "Original Discharge Summary", category: "mandatory" },
+      { id: "final_bill", label: "Final Hospital Bill with break-up", category: "financial" },
+      { id: "payment_receipts", label: "Original Payment Receipts", category: "financial" },
+      { id: "investigation_reports", label: "Investigation/Diagnostic Reports", category: "supporting" },
+      { id: "pharmacy_bills", label: "Pharmacy Bills with Prescriptions", category: "supporting" },
+      { id: "kyc_docs", label: "KYC Documents (PAN/Aadhar)", category: "supporting" },
+    ],
+  },
 };
 
 export const GLOBAL_CHECKS = {

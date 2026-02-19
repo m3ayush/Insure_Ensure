@@ -55,7 +55,7 @@ const EXTRACTION_PROMPT = `You are an insurance document analyzer. Extract the f
 
 Return ONLY valid JSON with these exact keys:
 {
-  "insurer_name": "Name of the insurance company (e.g. Star Health, HDFC Ergo, ICICI Lombard, Niva Bupa, Care Health) or null if not found",
+  "insurer_name": "Name of the insurance company (e.g. Star Health, HDFC Ergo, ICICI Lombard, Niva Bupa, Care Health, United India Insurance) or null if not found",
   "policy_number": "Policy or claim number or null if not found",
   "hospital_name": "Name of the hospital or null if not found",
   "discharge_date": "Date of discharge in DD/MM/YYYY format or null if not found",
