@@ -95,5 +95,5 @@ npm run dev
 ## 🏃‍♂️ Usage
 
 1. Start both the frontend (`npm run dev` in the root) and backend (`npm run dev` in the `/server` folder).
-2. Open your browser and navigate to the local link provided by Vite (typically `http://localhost:5173`).
+2. Open your browser and navigate to the local link provided by Vite (typically `http://localhost:xxxx`).
 3. Sign up or log in to access the Dashboard, generate Recommendations, or use the Chatbot/Document Chat features.
