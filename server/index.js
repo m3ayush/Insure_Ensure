@@ -1,6 +1,7 @@
+import dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
+
 import connectDB from "./config/db.js";
 import recommendationRoutes from "./routes/recommendation.js";
 import chatbotRoutes from "./routes/chatbot.js";

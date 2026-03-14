@@ -9,7 +9,8 @@ router.post("/", validateRecommendation, async (req, res) => {
   try {
     const doc = await Recommendation.create(req.body);
 
-    const recommendations = matchPlans(
+    // matchPlans is now async — fetches live data via Gemini Search Grounding
+    const recommendations = await matchPlans(
       req.body.common_user_data,
       req.body.selected_category,
       req.body.category_data
