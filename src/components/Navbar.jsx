@@ -3,8 +3,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 export default function Navbar() {
-  const { logout } = useAuth();
+  const { logout, currentUser } = useAuth();
   const navigate = useNavigate();
+  const isUnverified = currentUser && !currentUser.emailVerified &&
+    !currentUser.providerData?.some((p) => p.providerId === "google.com");
   const [menuOpen, setMenuOpen] = useState(false);
 
   async function handleLogout() {
@@ -18,9 +20,19 @@ export default function Navbar() {
     { to: "/reimbursement", label: "Reimbursement" },
     { to: "/home#contact", label: "Contact" },
     { to: "/home#about", label: "About Us" },
+    { to: "/account", label: "Account" },
   ];
 
   return (
+    <>
+    {isUnverified && (
+      <div className="bg-amber-50 border-b border-amber-200 text-center py-2 px-4 text-sm text-amber-800">
+        Your email is not verified.{" "}
+        <Link to="/account" className="font-semibold underline hover:text-amber-900">
+          Resend verification email
+        </Link>
+      </div>
+    )}
     <nav className="bg-white shadow-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
@@ -103,5 +115,6 @@ export default function Navbar() {
         )}
       </div>
     </nav>
+    </>
   );
 }

@@ -43,7 +43,7 @@ export default function Reimbursement() {
     setAuditPhase("uploading");
 
     try {
-      const result = await uploadPrimaryDocument(currentUser.uid, file);
+      const result = await uploadPrimaryDocument(file);
 
       setSessionId(result.sessionId);
       setExtractedData(result.extractedData);
@@ -72,7 +72,7 @@ export default function Reimbursement() {
     setError("");
 
     try {
-      const result = await selectInsurerApi(currentUser.uid, sessionId, insurerKey);
+      const result = await selectInsurerApi(sessionId, insurerKey);
 
       setInsurer(result.insurer);
       setChecklist(result.insurer.mandatory_docs);
@@ -93,7 +93,7 @@ export default function Reimbursement() {
     setError("");
 
     try {
-      const result = await uploadChecklistDoc(currentUser.uid, sessionId, docId, file);
+      const result = await uploadChecklistDoc(sessionId, docId, file);
 
       setUploadedDocs(new Set(result.uploadedDocIds));
       setScore(result.score);
@@ -240,7 +240,6 @@ export default function Reimbursement() {
       {/* History modal */}
       {showHistory && (
         <AuditHistoryModal
-          uid={currentUser.uid}
           onClose={() => setShowHistory(false)}
         />
       )}

@@ -1,7 +1,9 @@
 const API_BASE = "/api";
 
-export async function fetchRecommendationHistory(uid) {
-  const response = await fetch(`${API_BASE}/recommendations/${uid}`);
+export async function fetchRecommendationHistory() {
+  const response = await fetch(`${API_BASE}/recommendations/history`, {
+    credentials: "include",
+  });
   if (!response.ok) {
     throw new Error("Failed to fetch history");
   }
@@ -13,6 +15,7 @@ export async function submitRecommendation(payload) {
   const response = await fetch(`${API_BASE}/recommendations`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
+    credentials: "include",
     body: JSON.stringify(payload),
   });
   if (!response.ok) {

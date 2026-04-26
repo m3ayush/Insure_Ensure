@@ -39,7 +39,7 @@ export default function DocumentChatWindow() {
     ]);
 
     try {
-      const data = await uploadDocument(currentUser.uid, file);
+      const data = await uploadDocument(file);
       setSessionId(data.sessionId);
       setUploadedFileName(data.fileName);
       setSuggestedQuestions(data.suggestedQuestions || []);
@@ -99,7 +99,7 @@ export default function DocumentChatWindow() {
       .map((m) => ({ role: m.role, content: m.content }));
 
     try {
-      const data = await sendDocumentQuestion(currentUser.uid, sessionId, message, history);
+      const data = await sendDocumentQuestion(sessionId, message, history);
       setMessages((prev) => [
         ...prev,
         { role: "assistant", content: data.response, timestamp: Date.now() },

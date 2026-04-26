@@ -1,6 +1,10 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { normalizeEmail, validateEmail } from "../utils/validators";
+import { checkThrottle, recordFailure, clearThrottle } from "../utils/authThrottle";
+
+const SIGNIN_THROTTLE = { scope: "signin", maxAttempts: 5, windowMs: 5 * 60_000 };
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
@@ -9,16 +13,38 @@ export default function SignIn() {
   const [loading, setLoading] = useState(false);
   const { login, googleSignIn } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const passwordReset = new URLSearchParams(location.search).get("reset") === "1";
 
   async function handleSubmit(e) {
     e.preventDefault();
     setError("");
+    const normalizedEmail = normalizeEmail(email);
+    if (!validateEmail(normalizedEmail)) {
+      setError("Enter a valid email address.");
+      return;
+    }
+    if (!password) {
+      setError("Invalid email or password.");
+      return;
+    }
+    const gate = checkThrottle({ ...SIGNIN_THROTTLE, key: normalizedEmail });
+    if (!gate.allowed) {
+      setError(`Too many failed attempts. Try again in ${gate.retryAfterSec}s.`);
+      return;
+    }
     setLoading(true);
     try {
-      await login(email, password);
+      await login(normalizedEmail, password);
+      clearThrottle({ scope: SIGNIN_THROTTLE.scope, key: normalizedEmail });
       navigate("/home");
     } catch (err) {
-      setError("Invalid email or password.");
+      recordFailure({ scope: SIGNIN_THROTTLE.scope, key: normalizedEmail });
+      if (err?.code === "account-disabled") {
+        setError("This account has been disabled. Contact support.");
+      } else {
+        setError("Invalid email or password.");
+      }
     }
     setLoading(false);
   }
@@ -28,7 +54,7 @@ export default function SignIn() {
     try {
       await googleSignIn();
       navigate("/home");
-    } catch (err) {
+    } catch {
       setError("Google sign-in failed.");
     }
   }
@@ -42,6 +68,12 @@ export default function SignIn() {
         <p className="text-center text-gray-500 mb-6">
           Sign in to your account
         </p>
+
+        {passwordReset && (
+          <div className="bg-green-50 text-green-700 p-3 rounded-lg mb-4 text-sm">
+            Password reset successful. Please sign in with your new password.
+          </div>
+        )}
 
         {error && (
           <div className="bg-red-50 text-red-600 p-3 rounded-lg mb-4 text-sm">

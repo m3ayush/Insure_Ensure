@@ -12,7 +12,7 @@ function formatDate(dateStr) {
   });
 }
 
-export default function HistoryModal({ uid, onClose, onViewResults }) {
+export default function HistoryModal({ onClose, onViewResults }) {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -21,7 +21,7 @@ export default function HistoryModal({ uid, onClose, onViewResults }) {
     let cancelled = false;
     setLoading(true);
     setError("");
-    fetchRecommendationHistory(uid)
+    fetchRecommendationHistory()
       .then((data) => {
         if (!cancelled) setHistory(data);
       })
@@ -32,7 +32,7 @@ export default function HistoryModal({ uid, onClose, onViewResults }) {
         if (!cancelled) setLoading(false);
       });
     return () => { cancelled = true; };
-  }, [uid]);
+  }, []);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">

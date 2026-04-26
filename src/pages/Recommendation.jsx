@@ -51,7 +51,6 @@ export default function Recommendation() {
     setSubmitting(true);
     try {
       const response = await submitRecommendation({
-        firebase_uid: currentUser.uid,
         common_user_data: {
           ...commonData,
           annual_income: Number(commonData.annual_income),
@@ -162,7 +161,6 @@ export default function Recommendation() {
 
       {showHistory && (
         <HistoryModal
-          uid={currentUser.uid}
           onClose={() => setShowHistory(false)}
           onViewResults={handleViewHistory}
         />

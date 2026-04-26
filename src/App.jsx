@@ -8,6 +8,8 @@ import Home from "./pages/Home";
 import Recommendation from "./pages/Recommendation";
 import Chatbot from "./pages/Chatbot";
 import Reimbursement from "./pages/Reimbursement";
+import Account from "./pages/Account";
+import ChangePassword from "./pages/ChangePassword";
 
 function AppRoutes() {
   const { currentUser } = useAuth();
@@ -59,6 +61,22 @@ function AppRoutes() {
         element={
           <ProtectedRoute>
             <Reimbursement />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/account"
+        element={
+          <ProtectedRoute>
+            <Account />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/change-password"
+        element={
+          <ProtectedRoute>
+            <ChangePassword />
           </ProtectedRoute>
         }
       />

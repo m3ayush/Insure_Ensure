@@ -1,10 +1,8 @@
 export function validateRecommendation(req, res, next) {
-  const { firebase_uid, common_user_data, selected_category, category_data } =
-    req.body;
+  const { common_user_data, selected_category, category_data } = req.body;
 
   const errors = [];
 
-  if (!firebase_uid) errors.push("firebase_uid is required");
   if (!common_user_data) errors.push("common_user_data is required");
   if (!selected_category) errors.push("selected_category is required");
   if (!category_data || Object.keys(category_data).length === 0)

@@ -1,12 +1,12 @@
 const API_BASE = "/api";
 
-export async function uploadPrimaryDocument(firebaseUid, file) {
+export async function uploadPrimaryDocument(file) {
   const formData = new FormData();
   formData.append("file", file);
-  formData.append("firebase_uid", firebaseUid);
 
   const response = await fetch(`${API_BASE}/reimbursement/upload-primary`, {
     method: "POST",
+    credentials: "include",
     body: formData,
   });
 
@@ -26,15 +26,12 @@ export async function uploadPrimaryDocument(firebaseUid, file) {
   return response.json();
 }
 
-export async function selectInsurer(firebaseUid, sessionId, insurerKey) {
+export async function selectInsurer(sessionId, insurerKey) {
   const response = await fetch(`${API_BASE}/reimbursement/select-insurer`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      firebase_uid: firebaseUid,
-      session_id: sessionId,
-      insurer_key: insurerKey,
-    }),
+    credentials: "include",
+    body: JSON.stringify({ session_id: sessionId, insurer_key: insurerKey }),
   });
 
   if (!response.ok) {
@@ -51,15 +48,15 @@ export async function selectInsurer(firebaseUid, sessionId, insurerKey) {
   return response.json();
 }
 
-export async function uploadChecklistDoc(firebaseUid, sessionId, docId, file) {
+export async function uploadChecklistDoc(sessionId, docId, file) {
   const formData = new FormData();
   formData.append("file", file);
-  formData.append("firebase_uid", firebaseUid);
   formData.append("session_id", sessionId);
   formData.append("doc_id", docId);
 
   const response = await fetch(`${API_BASE}/reimbursement/upload-doc`, {
     method: "POST",
+    credentials: "include",
     body: formData,
   });
 
@@ -79,8 +76,10 @@ export async function uploadChecklistDoc(firebaseUid, sessionId, docId, file) {
   return response.json();
 }
 
-export async function fetchAuditHistory(uid) {
-  const response = await fetch(`${API_BASE}/reimbursement/history/${uid}`);
+export async function fetchAuditHistory() {
+  const response = await fetch(`${API_BASE}/reimbursement/history`, {
+    credentials: "include",
+  });
 
   if (!response.ok) {
     throw new Error("Failed to fetch audit history");

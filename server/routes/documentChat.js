@@ -11,7 +11,6 @@ import DocumentChatMessage from "../models/DocumentChatMessage.js";
 
 const router = Router();
 
-// Multer config: memory storage, 5MB limit, accept only jpg/png/pdf
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: { fileSize: 5 * 1024 * 1024 },
@@ -25,8 +24,6 @@ const upload = multer({
   },
 });
 
-// ── Upload endpoint ─────────────────────────────────────────
-
 router.post("/upload", (req, res, next) => {
   upload.single("file")(req, res, (err) => {
     if (err) {
@@ -38,12 +35,6 @@ router.post("/upload", (req, res, next) => {
     next();
   });
 }, chatRateLimiter, async (req, res) => {
-  const firebase_uid = req.body.firebase_uid;
-
-  if (!firebase_uid || typeof firebase_uid !== "string") {
-    return res.status(400).json({ success: false, message: "firebase_uid is required" });
-  }
-
   if (!req.file) {
     return res.status(400).json({ success: false, message: "No file uploaded" });
   }
@@ -55,11 +46,10 @@ router.post("/upload", (req, res, next) => {
       req.file.originalname
     );
 
-    setSessionUid(result.sessionId, firebase_uid);
+    setSessionUid(result.sessionId, req.uid);
 
-    // Log async
     DocumentChatMessage.create({
-      firebase_uid,
+      firebase_uid: req.uid,
       session_id: result.sessionId,
       action: "upload",
       file_name: req.file.originalname,
@@ -84,14 +74,8 @@ router.post("/upload", (req, res, next) => {
   }
 });
 
-// ── Ask endpoint ────────────────────────────────────────────
-
 function validateAskRequest(req, res, next) {
-  const { firebase_uid, sessionId, message, conversationHistory } = req.body;
-
-  if (!firebase_uid || typeof firebase_uid !== "string") {
-    return res.status(400).json({ success: false, message: "firebase_uid is required" });
-  }
+  const { sessionId, message, conversationHistory } = req.body;
 
   if (!sessionId || typeof sessionId !== "string") {
     return res.status(400).json({ success: false, message: "sessionId is required" });
@@ -110,7 +94,6 @@ function validateAskRequest(req, res, next) {
   }
   req.body.message = trimmed;
 
-  // Validate and trim conversation history
   if (conversationHistory !== undefined) {
     if (!Array.isArray(conversationHistory)) {
       return res.status(400).json({
@@ -143,7 +126,7 @@ function validateAskRequest(req, res, next) {
 }
 
 router.post("/ask", validateAskRequest, chatRateLimiter, async (req, res) => {
-  const { firebase_uid, sessionId, message, conversationHistory } = req.body;
+  const { sessionId, message, conversationHistory } = req.body;
 
   if (!isSessionValid(sessionId)) {
     return res.status(404).json({
@@ -155,9 +138,8 @@ router.post("/ask", validateAskRequest, chatRateLimiter, async (req, res) => {
   try {
     const result = await answerDocumentQuestion(sessionId, message, conversationHistory);
 
-    // Log async
     DocumentChatMessage.create({
-      firebase_uid,
+      firebase_uid: req.uid,
       session_id: sessionId,
       action: "ask",
       query: message,
@@ -166,10 +148,7 @@ router.post("/ask", validateAskRequest, chatRateLimiter, async (req, res) => {
       error: result.error || null,
     }).catch((err) => console.error("Document chat log error:", err.message));
 
-    res.json({
-      success: true,
-      response: result.response,
-    });
+    res.json({ success: true, response: result.response });
   } catch (err) {
     console.error("Document ask error:", err.message);
     if (err.message === "SESSION_NOT_FOUND") {

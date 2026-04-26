@@ -5,13 +5,8 @@ import ChatMessage from "../models/ChatMessage.js";
 
 const router = Router();
 
-// Validate and sanitize the request
 function validateChatRequest(req, res, next) {
-  const { firebase_uid, message, conversationHistory } = req.body;
-
-  if (!firebase_uid || typeof firebase_uid !== "string") {
-    return res.status(400).json({ success: false, message: "firebase_uid is required" });
-  }
+  const { message, conversationHistory } = req.body;
 
   if (!message || typeof message !== "string") {
     return res.status(400).json({ success: false, message: "message is required" });
@@ -26,7 +21,6 @@ function validateChatRequest(req, res, next) {
   }
   req.body.message = trimmed;
 
-  // Validate and trim conversation history
   if (conversationHistory !== undefined) {
     if (!Array.isArray(conversationHistory)) {
       return res.status(400).json({
@@ -59,7 +53,7 @@ function validateChatRequest(req, res, next) {
 }
 
 router.post("/", validateChatRequest, chatRateLimiter, async (req, res) => {
-  const { firebase_uid, message, conversationHistory } = req.body;
+  const { message, conversationHistory } = req.body;
 
   if (!isRAGReady()) {
     return res.status(503).json({
@@ -71,9 +65,8 @@ router.post("/", validateChatRequest, chatRateLimiter, async (req, res) => {
   try {
     const result = await handleChatQuery(message, conversationHistory);
 
-    // Log to MongoDB (don't let logging failure block the response)
     ChatMessage.create({
-      firebase_uid,
+      firebase_uid: req.uid,
       query: message,
       response: result.response,
       retrieved_chunks: result.sources.map((s) => ({

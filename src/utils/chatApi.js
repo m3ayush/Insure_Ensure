@@ -1,14 +1,11 @@
 const API_BASE = "/api";
 
-export async function sendChatMessage(firebaseUid, message, conversationHistory) {
+export async function sendChatMessage(message, conversationHistory) {
   const response = await fetch(`${API_BASE}/chatbot`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      firebase_uid: firebaseUid,
-      message,
-      conversationHistory,
-    }),
+    credentials: "include",
+    body: JSON.stringify({ message, conversationHistory }),
   });
 
   if (!response.ok) {

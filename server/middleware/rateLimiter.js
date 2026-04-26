@@ -11,8 +11,9 @@ setInterval(() => {
 }, 5 * 60_000);
 
 export function chatRateLimiter(req, res, next) {
-  const uid = req.body.firebase_uid;
-  if (!uid) return next(); // validation middleware will catch this
+  // uid is set by verifyAuth middleware before this runs
+  const uid = req.uid;
+  if (!uid) return next();
 
   const now = Date.now();
   const entry = windows.get(uid);

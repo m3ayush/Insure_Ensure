@@ -17,7 +17,7 @@ function scoreBadge(score) {
   return "bg-red-100 text-red-700";
 }
 
-export default function AuditHistoryModal({ uid, onClose }) {
+export default function AuditHistoryModal({ onClose }) {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -26,7 +26,7 @@ export default function AuditHistoryModal({ uid, onClose }) {
     let cancelled = false;
     setLoading(true);
     setError("");
-    fetchAuditHistory(uid)
+    fetchAuditHistory()
       .then((data) => {
         if (!cancelled) setHistory(data);
       })
@@ -37,7 +37,7 @@ export default function AuditHistoryModal({ uid, onClose }) {
         if (!cancelled) setLoading(false);
       });
     return () => { cancelled = true; };
-  }, [uid]);
+  }, []);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">

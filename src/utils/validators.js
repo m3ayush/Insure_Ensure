@@ -10,6 +10,65 @@ export function validateEmail(val) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
 }
 
+export function normalizeEmail(val) {
+  return (val || "").trim().toLowerCase();
+}
+
+const DISPOSABLE_EMAIL_DOMAINS = [
+  "mailinator.com",
+  "guerrillamail.com",
+  "tempmail.com",
+  "10minutemail.com",
+  "yopmail.com",
+  "trashmail.com",
+  "fakeinbox.com",
+  "throwawaymail.com",
+  "sharklasers.com",
+  "getnada.com",
+  "dispostable.com",
+];
+
+export function isDisposableEmail(val) {
+  const normalized = normalizeEmail(val);
+  const at = normalized.lastIndexOf("@");
+  if (at === -1) return false;
+  const domain = normalized.slice(at + 1);
+  return DISPOSABLE_EMAIL_DOMAINS.includes(domain);
+}
+
+export function validateName(val) {
+  const trimmed = (val || "").trim();
+  if (!trimmed) return false;
+  return /^[A-Za-z]+(?:[ '-][A-Za-z]+)*$/.test(trimmed);
+}
+
+export function validatePassword(val) {
+  if (!val || val.length < 8) return false;
+  const hasLetter = /[A-Za-z]/.test(val);
+  const hasDigit = /\d/.test(val);
+  return hasLetter && hasDigit;
+}
+
+export function validateDOB(val) {
+  if (!val) return false;
+  const date = new Date(val);
+  if (Number.isNaN(date.getTime())) return false;
+  const today = new Date();
+  today.setHours(23, 59, 59, 999);
+  if (date > today) return false;
+  const age = calculateAge(val);
+  return age >= 1 && age <= 120;
+}
+
+export function formatContactWithCountryCode(val) {
+  const digits = (val || "").replace(/\D/g, "");
+  const stripped = digits.startsWith("91") && digits.length === 12
+    ? digits.slice(2)
+    : digits;
+  if (!validateMobile(stripped)) return null;
+  return `+91${stripped}`;
+}
+
 export function calculateAge(dob) {
   const [year, month, day] = dob.split("-").map(Number);
   const today = new Date();

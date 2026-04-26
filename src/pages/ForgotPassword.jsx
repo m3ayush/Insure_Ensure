@@ -1,6 +1,13 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { normalizeEmail, validateEmail } from "../utils/validators";
+import { checkThrottle, recordFailure } from "../utils/authThrottle";
+
+const GENERIC_SUCCESS =
+  "If an account with that email exists, a password reset link has been sent.";
+
+const RESET_THROTTLE = { scope: "reset", maxAttempts: 3, windowMs: 10 * 60_000 };
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -13,13 +20,33 @@ export default function ForgotPassword() {
     e.preventDefault();
     setError("");
     setMessage("");
-    setLoading(true);
-    try {
-      await resetPassword(email);
-      setMessage("Check your inbox for a password reset link.");
-    } catch (err) {
-      setError("Failed to send reset email. Check the email address.");
+    const normalizedEmail = normalizeEmail(email);
+    if (!validateEmail(normalizedEmail)) {
+      setError("Enter a valid email address.");
+      return;
     }
+    const gate = checkThrottle({ ...RESET_THROTTLE, key: normalizedEmail });
+    if (!gate.allowed) {
+      setMessage(GENERIC_SUCCESS);
+      return;
+    }
+    recordFailure({ scope: RESET_THROTTLE.scope, key: normalizedEmail });
+    setLoading(true);
+    const continueUrl = `${window.location.origin}/signin?reset=1`;
+    try {
+      await resetPassword(normalizedEmail, continueUrl);
+    } catch (err) {
+      if (
+        err?.code &&
+        err.code !== "auth/user-not-found" &&
+        err.code !== "auth/invalid-email"
+      ) {
+        setError("Something went wrong. Please try again shortly.");
+        setLoading(false);
+        return;
+      }
+    }
+    setMessage(GENERIC_SUCCESS);
     setLoading(false);
   }
 

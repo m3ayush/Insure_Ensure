@@ -1,12 +1,12 @@
 const API_BASE = "/api";
 
-export async function uploadDocument(firebaseUid, file) {
+export async function uploadDocument(file) {
   const formData = new FormData();
   formData.append("file", file);
-  formData.append("firebase_uid", firebaseUid);
 
   const response = await fetch(`${API_BASE}/document-chat/upload`, {
     method: "POST",
+    credentials: "include",
     body: formData,
   });
 
@@ -26,16 +26,12 @@ export async function uploadDocument(firebaseUid, file) {
   return response.json();
 }
 
-export async function sendDocumentQuestion(firebaseUid, sessionId, message, conversationHistory) {
+export async function sendDocumentQuestion(sessionId, message, conversationHistory) {
   const response = await fetch(`${API_BASE}/document-chat/ask`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      firebase_uid: firebaseUid,
-      sessionId,
-      message,
-      conversationHistory,
-    }),
+    credentials: "include",
+    body: JSON.stringify({ sessionId, message, conversationHistory }),
   });
 
   if (!response.ok) {

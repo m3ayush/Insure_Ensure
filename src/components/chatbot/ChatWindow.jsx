@@ -50,7 +50,7 @@ export default function ChatWindow() {
       .map((m) => ({ role: m.role, content: m.content }));
 
     try {
-      const data = await sendChatMessage(currentUser.uid, message, history);
+      const data = await sendChatMessage(message, history);
       setMessages((prev) => [
         ...prev,
         { role: "assistant", content: data.response, timestamp: Date.now() },

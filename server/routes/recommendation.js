@@ -7,9 +7,11 @@ const router = Router();
 
 router.post("/", validateRecommendation, async (req, res) => {
   try {
-    const doc = await Recommendation.create(req.body);
+    const doc = await Recommendation.create({
+      ...req.body,
+      firebase_uid: req.uid,
+    });
 
-    // matchPlans is now async — fetches live data via Gemini Search Grounding
     const recommendations = await matchPlans(
       req.body.common_user_data,
       req.body.selected_category,
@@ -29,13 +31,13 @@ router.post("/", validateRecommendation, async (req, res) => {
   }
 });
 
-router.get("/:uid", async (req, res) => {
+router.get("/history", async (req, res) => {
   try {
-    const docs = await Recommendation.find({ firebase_uid: req.params.uid })
+    const docs = await Recommendation.find({ firebase_uid: req.uid })
       .sort({ createdAt: -1 })
       .lean();
     res.json({ success: true, data: docs });
-  } catch (err) {
+  } catch {
     res.status(500).json({ success: false, message: "Server error" });
   }
 });

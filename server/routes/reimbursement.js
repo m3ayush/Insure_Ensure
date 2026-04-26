@@ -5,7 +5,6 @@ import ReimbursementAudit from "../models/ReimbursementAudit.js";
 import {
   extractDischargeSummary,
   setSessionUid,
-  getSession,
   selectInsurer,
   addDocument,
   getAvailableInsurers,
@@ -38,14 +37,7 @@ function handleMulterError(req, res, next) {
   });
 }
 
-// ── Upload primary document (Discharge Summary) ─────────────
-
 router.post("/upload-primary", handleMulterError, chatRateLimiter, async (req, res) => {
-  const firebase_uid = req.body.firebase_uid;
-
-  if (!firebase_uid || typeof firebase_uid !== "string") {
-    return res.status(400).json({ success: false, message: "firebase_uid is required" });
-  }
   if (!req.file) {
     return res.status(400).json({ success: false, message: "No file uploaded" });
   }
@@ -57,11 +49,10 @@ router.post("/upload-primary", handleMulterError, chatRateLimiter, async (req, r
       req.file.originalname
     );
 
-    setSessionUid(result.sessionId, firebase_uid);
+    setSessionUid(result.sessionId, req.uid);
 
-    // Persist to MongoDB (async, non-blocking)
     ReimbursementAudit.create({
-      firebase_uid,
+      firebase_uid: req.uid,
       session_id: result.sessionId,
       extracted_data: result.extractedData,
       uploaded_docs: [{ doc_id: "discharge_summary", file_name: req.file.originalname }],
@@ -92,13 +83,11 @@ router.post("/upload-primary", handleMulterError, chatRateLimiter, async (req, r
   }
 });
 
-// ── Select insurer manually (fallback) ──────────────────────
-
 router.post("/select-insurer", chatRateLimiter, async (req, res) => {
-  const { firebase_uid, session_id, insurer_key } = req.body;
+  const { session_id, insurer_key } = req.body;
 
-  if (!firebase_uid || !session_id || !insurer_key) {
-    return res.status(400).json({ success: false, message: "firebase_uid, session_id, and insurer_key are required" });
+  if (!session_id || !insurer_key) {
+    return res.status(400).json({ success: false, message: "session_id and insurer_key are required" });
   }
 
   const result = selectInsurer(session_id, insurer_key);
@@ -106,9 +95,8 @@ router.post("/select-insurer", chatRateLimiter, async (req, res) => {
     return res.status(404).json({ success: false, message: "Session expired or insurer not found" });
   }
 
-  // Update MongoDB (async)
   ReimbursementAudit.findOneAndUpdate(
-    { session_id },
+    { session_id, firebase_uid: req.uid },
     {
       "extracted_data.insurer_key": insurer_key,
       "extracted_data.insurer_name": result.insurer.display_name,
@@ -122,15 +110,13 @@ router.post("/select-insurer", chatRateLimiter, async (req, res) => {
   res.json({ success: true, ...result });
 });
 
-// ── Upload additional document against checklist ────────────
-
 router.post("/upload-doc", handleMulterError, chatRateLimiter, async (req, res) => {
-  const { firebase_uid, session_id, doc_id } = req.body;
+  const { session_id, doc_id } = req.body;
 
-  if (!firebase_uid || !session_id || !doc_id) {
+  if (!session_id || !doc_id) {
     return res.status(400).json({
       success: false,
-      message: "firebase_uid, session_id, and doc_id are required",
+      message: "session_id and doc_id are required",
     });
   }
   if (!req.file) {
@@ -145,9 +131,8 @@ router.post("/upload-doc", handleMulterError, chatRateLimiter, async (req, res) 
     });
   }
 
-  // Update MongoDB (async)
   ReimbursementAudit.findOneAndUpdate(
-    { session_id },
+    { session_id, firebase_uid: req.uid },
     {
       $push: { uploaded_docs: { doc_id, file_name: req.file.originalname } },
       $set: {
@@ -168,17 +153,14 @@ router.post("/upload-doc", handleMulterError, chatRateLimiter, async (req, res) 
   });
 });
 
-// ── Get audit history ───────────────────────────────────────
-
-router.get("/history/:uid", async (req, res) => {
+router.get("/history", async (req, res) => {
   try {
-    const audits = await ReimbursementAudit.find({ firebase_uid: req.params.uid })
+    const audits = await ReimbursementAudit.find({ firebase_uid: req.uid })
       .sort({ createdAt: -1 })
       .limit(20)
       .lean();
     res.json({ success: true, data: audits });
-  } catch (err) {
-    console.error("[REIMB] History fetch error:", err.message);
+  } catch {
     res.status(500).json({ success: false, message: "Failed to fetch history" });
   }
 });
