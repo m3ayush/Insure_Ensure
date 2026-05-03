@@ -1,0 +1,28 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="InsureEnsure logo">
+  <path
+    d="M77 24C53.2518 24 34 43.2518 34 67V157.349C34 180.396 46.1757 201.728 66.0326 213.43L122.419 246.657C125.862 248.686 130.138 248.686 133.581 246.657L189.967 213.43C209.824 201.728 222 180.396 222 157.349V153H165C155.059 153 147 144.941 147 135V126H222V91H147V86C147 76.0589 155.059 68 165 68H222V31C222 27.134 218.866 24 215 24H77Z"
+    fill="url(#shieldGradient)"
+  />
+
+  <path
+    d="M84 72H118V153.26C118 167.802 125.597 181.286 138.04 188.815L148 194.84L119.2 211.75L102.474 201.585C91.0102 194.62 84 182.181 84 168.77V72Z"
+    fill="white"
+  />
+
+  <path
+    d="M147 68H222V91H147V86C147 76.0589 155.059 68 165 68H147Z"
+    fill="white"
+  />
+
+  <path
+    d="M147 126H222V153H147V135C147 130.029 151.029 126 156 126H147Z"
+    fill="white"
+  />
+
+  <defs>
+    <linearGradient id="shieldGradient" x1="52" y1="224" x2="214" y2="31" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#35BB58"/>
+      <stop offset="1" stop-color="#63D94F"/>
+    </linearGradient>
+  </defs>
+</svg>
