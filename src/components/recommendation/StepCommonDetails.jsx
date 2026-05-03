@@ -2,9 +2,9 @@ import { useState } from "react";
 import { validateCommonData } from "../../utils/validators";
 
 const inputClass =
-  "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition";
+  "w-full px-5 py-3.5 bg-white dark:bg-black/10 border border-[#111] dark:border-black/20 rounded-[1.5rem] focus:ring-2 focus:ring-black dark:focus:ring-black outline-none transition font-medium text-black dark:text-black placeholder-gray-500 dark:placeholder-gray-700";
 const errorInputClass =
-  "w-full px-4 py-2 border border-red-400 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition";
+  "w-full px-5 py-3.5 bg-red-50 dark:bg-red-900/10 border border-red-500 dark:border-red-500 rounded-[1.5rem] focus:ring-2 focus:ring-red-500 outline-none transition font-medium text-black dark:text-white placeholder-gray-500";
 
 export default function StepCommonDetails({ commonData, setCommonData, onNext }) {
   const [errors, setErrors] = useState({});
@@ -28,8 +28,8 @@ export default function StepCommonDetails({ commonData, setCommonData, onNext })
 
   return (
     <form onSubmit={handleSubmit}>
-      <h2 className="text-2xl font-bold text-gray-800 mb-1">Personal Details</h2>
-      <p className="text-gray-500 mb-6 text-sm">Fill in your basic information to get started.</p>
+      <h2 className="text-2xl font-black text-black dark:text-white mb-1 tracking-tight">Personal Details</h2>
+      <p className="text-gray-600 dark:text-gray-400 mb-6 text-sm font-bold">Fill in your basic information to get started.</p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Full Name */}
@@ -75,7 +75,7 @@ export default function StepCommonDetails({ commonData, setCommonData, onNext })
                   value={g}
                   checked={commonData.gender === g}
                   onChange={(e) => handleChange("gender", e.target.value)}
-                  className="accent-indigo-600"
+                  className="accent-black dark:accent-[#f6ca7d] w-4 h-4"
                 />
                 {g.charAt(0) + g.slice(1).toLowerCase()}
               </label>
@@ -226,7 +226,7 @@ export default function StepCommonDetails({ commonData, setCommonData, onNext })
       <div className="mt-8 flex justify-end">
         <button
           type="submit"
-          className="bg-indigo-600 text-white px-8 py-2.5 rounded-lg font-semibold hover:bg-indigo-700 transition cursor-pointer"
+          className="bg-black dark:bg-[#f6ca7d] text-white dark:text-black px-8 py-3.5 rounded-[1.5rem] font-bold hover:bg-gray-800 dark:hover:bg-white transition cursor-pointer border border-transparent dark:border-[#111]"
         >
           Next
         </button>

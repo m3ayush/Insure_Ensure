@@ -16,8 +16,8 @@ export default function StepCategorySelection({ onSelectCategory, onBack }) {
 
   return (
     <div>
-      <h2 className="text-2xl font-bold text-gray-800 mb-1">Choose Insurance Category</h2>
-      <p className="text-gray-500 mb-6 text-sm">Select the type of insurance you're looking for.</p>
+      <h2 className="text-2xl font-black text-black dark:text-white mb-1 tracking-tight">Choose Insurance Category</h2>
+      <p className="text-gray-600 dark:text-gray-400 mb-6 text-sm font-bold">Select the type of insurance you're looking for.</p>
 
       {/* Search bar */}
       <div className="relative mb-6">
@@ -39,7 +39,7 @@ export default function StepCategorySelection({ onSelectCategory, onBack }) {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search insurance categories..."
-          className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
+          className="w-full pl-10 pr-5 py-3.5 bg-white dark:bg-black/10 border border-[#111] dark:border-black/20 rounded-[1.5rem] focus:ring-2 focus:ring-black dark:focus:ring-black outline-none transition font-medium text-black dark:text-white placeholder-gray-500"
         />
       </div>
 
@@ -49,7 +49,7 @@ export default function StepCategorySelection({ onSelectCategory, onBack }) {
       ) : (
         filteredGroups.map((group) => (
           <div key={group.groupName} className="mb-6">
-            <h3 className="text-lg font-semibold text-gray-700 mb-3">
+            <h3 className="text-lg font-black text-black dark:text-[#f6ca7d] mb-3 tracking-tight">
               {group.groupName}
             </h3>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
@@ -69,7 +69,7 @@ export default function StepCategorySelection({ onSelectCategory, onBack }) {
       <div className="mt-8 flex justify-start">
         <button
           onClick={onBack}
-          className="px-6 py-2.5 border border-gray-300 rounded-lg font-medium text-gray-700 hover:bg-gray-50 transition cursor-pointer"
+          className="px-6 py-2.5 bg-white dark:bg-[#111] border border-[#111] dark:border-[#333] rounded-full font-bold text-black dark:text-white hover:bg-[#f0eeb4] dark:hover:bg-[#222] transition cursor-pointer"
         >
           Back
         </button>
