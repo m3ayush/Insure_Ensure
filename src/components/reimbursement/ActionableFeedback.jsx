@@ -9,25 +9,25 @@ export default function ActionableFeedback({ score, missingDocIds, extractedData
 
   if (score >= 76) {
     tier = "green";
-    bgClass = "bg-green-50";
-    borderClass = "border-green-200";
-    iconColor = "text-green-600";
+    bgClass = "bg-[#f0eeb4] dark:bg-green-900/10";
+    borderClass = "border-[#111] dark:border-green-800";
+    iconColor = "text-green-700 dark:text-green-500";
     title = "Strong Chance of Approval";
     description = missingCount > 0
       ? `Your claim looks strong! Consider uploading the remaining ${missingCount} document${missingCount > 1 ? "s" : ""} to maximize your score.`
       : "All required documents are uploaded. Your claim is ready for submission!";
   } else if (score >= 41) {
     tier = "yellow";
-    bgClass = "bg-yellow-50";
-    borderClass = "border-yellow-200";
-    iconColor = "text-yellow-600";
+    bgClass = "bg-[#f6ca7d] dark:bg-yellow-900/10";
+    borderClass = "border-[#111] dark:border-yellow-800";
+    iconColor = "text-yellow-800 dark:text-yellow-500";
     title = "Action Required";
     description = `Your claim needs more documentation. ${missingCount} document${missingCount > 1 ? "s are" : " is"} still missing. Focus on mandatory and financial documents first.`;
   } else {
     tier = "red";
-    bgClass = "bg-red-50";
-    borderClass = "border-red-200";
-    iconColor = "text-red-600";
+    bgClass = "bg-[#ff4713] dark:bg-red-900/10";
+    borderClass = "border-[#111] dark:border-red-800";
+    iconColor = "text-white dark:text-red-500";
     title = "High Risk of Rejection";
     description = `Critical documents are missing. India's claim rejection rate is high due to incomplete paperwork. Upload ${missingCount} remaining document${missingCount > 1 ? "s" : ""} to improve your chances.`;
   }
@@ -44,7 +44,7 @@ export default function ActionableFeedback({ score, missingDocIds, extractedData
   }
 
   return (
-    <div className={`rounded-xl border ${borderClass} ${bgClass} p-6`}>
+    <div className={`rounded-[1.5rem] border ${borderClass} ${bgClass} p-6 shadow-[4px_4px_0px_0px_rgba(17,17,17,1)] dark:shadow-none transition-all duration-300`}>
       <div className="flex items-start gap-3 mb-3">
         {tier === "green" ? (
           <svg className={`w-6 h-6 ${iconColor} flex-shrink-0`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -60,8 +60,8 @@ export default function ActionableFeedback({ score, missingDocIds, extractedData
           </svg>
         )}
         <div>
-          <h3 className="text-sm font-semibold text-gray-900">{title}</h3>
-          <p className="text-sm text-gray-600 mt-0.5">{description}</p>
+          <h3 className={`text-sm font-black ${tier === 'red' ? 'text-white' : 'text-black'} dark:text-white tracking-tight`}>{title}</h3>
+          <p className={`text-sm font-bold ${tier === 'red' ? 'text-white/90' : 'text-gray-800'} dark:text-gray-400 mt-1`}>{description}</p>
         </div>
       </div>
 
@@ -70,8 +70,8 @@ export default function ActionableFeedback({ score, missingDocIds, extractedData
           <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Tips</p>
           <ul className="space-y-1.5">
             {tips.map((tip, i) => (
-              <li key={i} className="text-xs text-gray-600 flex items-start gap-2">
-                <span className="text-indigo-500 mt-0.5">&#8226;</span>
+              <li key={i} className={`text-xs font-bold flex items-start gap-2 ${tier === 'red' ? 'text-white/90' : 'text-gray-800'} dark:text-gray-400`}>
+                <span className={`${tier === 'red' ? 'text-white' : 'text-black'} dark:text-[#f6ca7d] mt-0.5`}>&#8226;</span>
                 {tip}
               </li>
             ))}

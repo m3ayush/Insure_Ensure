@@ -17,10 +17,10 @@ export default function ProbabilityGauge({ score, breakdown }) {
   const dashOffset = ARC_LENGTH * (1 - score / 100);
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-      <h3 className="text-base font-semibold text-gray-900 mb-4 flex items-center gap-2">
-        <svg className="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+    <div className="bg-white dark:bg-[#111111] border border-[#111] dark:border-[#333] rounded-[1.5rem] shadow-[4px_4px_0px_0px_rgba(17,17,17,1)] dark:shadow-[4px_4px_0px_0px_rgba(246,202,125,0.3)] p-6 transition-all duration-300">
+      <h3 className="text-lg font-black text-black dark:text-white mb-4 flex items-center gap-2 tracking-tight">
+        <svg className="w-5 h-5 text-black dark:text-[#f6ca7d]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
         </svg>
         Claim Probability Score
       </h3>
@@ -48,10 +48,10 @@ export default function ProbabilityGauge({ score, breakdown }) {
             className="transition-all duration-700 ease-in-out"
           />
           {/* Score text */}
-          <text x={CX} y={CY - 15} textAnchor="middle" className="text-3xl font-bold" fill="#111827" fontSize="36">
+          <text x={CX} y={CY - 15} textAnchor="middle" className="text-3xl font-black fill-black dark:fill-white" fontSize="36">
             {score}
           </text>
-          <text x={CX} y={CY + 5} textAnchor="middle" fill="#6b7280" fontSize="12">
+          <text x={CX} y={CY + 5} textAnchor="middle" className="fill-gray-600 dark:fill-gray-400 font-bold" fontSize="12">
             out of 100
           </text>
         </svg>

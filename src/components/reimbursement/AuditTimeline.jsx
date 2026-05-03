@@ -33,9 +33,9 @@ export default function AuditTimeline({ currentPhase }) {
                   <div
                     className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 border-2 transition-all duration-500 ${
                       isCompleted
-                        ? "bg-indigo-600 border-indigo-600 text-white"
-                        : "bg-white border-gray-300 text-gray-400"
-                    } ${isCurrent ? "ring-4 ring-indigo-100" : ""}`}
+                        ? "bg-black border-black text-white dark:bg-[#f6ca7d] dark:border-[#f6ca7d] dark:text-black"
+                        : "bg-white border-[#111] text-gray-500 dark:bg-[#111] dark:border-[#333] dark:text-gray-400"
+                    }`}
                   >
                     {isCompleted && !isCurrent ? (
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -48,7 +48,7 @@ export default function AuditTimeline({ currentPhase }) {
                   {!isLast && (
                     <div
                       className={`w-0.5 h-10 transition-colors duration-500 ${
-                        i < activeIndex ? "bg-indigo-600" : "bg-gray-200"
+                        i < activeIndex ? "bg-black dark:bg-[#f6ca7d]" : "bg-gray-300 dark:bg-gray-700"
                       }`}
                     />
                   )}
@@ -57,8 +57,8 @@ export default function AuditTimeline({ currentPhase }) {
                 {/* Label */}
                 <div className="pt-1">
                   <p
-                    className={`text-sm font-medium transition-colors duration-300 ${
-                      isCompleted ? "text-gray-900" : "text-gray-400"
+                    className={`text-sm font-bold transition-colors duration-300 ${
+                      isCompleted ? "text-black dark:text-white" : "text-gray-500 dark:text-gray-500"
                     }`}
                   >
                     {step.label}
@@ -66,10 +66,10 @@ export default function AuditTimeline({ currentPhase }) {
                   {isCurrent && (
                     <div className="flex items-center gap-1.5 mt-1">
                       <span className="relative flex h-2 w-2">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75" />
-                        <span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-500" />
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-black dark:bg-[#f6ca7d] opacity-75" />
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-black dark:bg-[#ff4713]" />
                       </span>
-                      <span className="text-xs text-indigo-600">In progress</span>
+                      <span className="text-xs font-bold text-black dark:text-[#f6ca7d]">In progress</span>
                     </div>
                   )}
                 </div>
@@ -90,8 +90,8 @@ export default function AuditTimeline({ currentPhase }) {
               <div
                 className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 border-2 transition-all duration-500 ${
                   isCompleted
-                    ? "bg-indigo-600 border-indigo-600 text-white"
-                    : "bg-white border-gray-300 text-gray-400"
+                    ? "bg-black border-black text-white dark:bg-[#f6ca7d] dark:border-[#f6ca7d] dark:text-black"
+                    : "bg-white border-[#111] text-gray-500 dark:bg-[#111] dark:border-[#333] dark:text-gray-400"
                 }`}
               >
                 {isCompleted && i < activeIndex ? (
@@ -105,7 +105,7 @@ export default function AuditTimeline({ currentPhase }) {
               {!isLast && (
                 <div
                   className={`flex-1 h-0.5 mx-1 transition-colors duration-500 ${
-                    i < activeIndex ? "bg-indigo-600" : "bg-gray-200"
+                    i < activeIndex ? "bg-black dark:bg-[#f6ca7d]" : "bg-gray-300 dark:bg-gray-700"
                   }`}
                 />
               )}

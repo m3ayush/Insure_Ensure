@@ -129,21 +129,21 @@ export default function Reimbursement() {
   const showResults = auditPhase === "extracting" || auditPhase === "checklist" || auditPhase === "complete";
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen flex flex-col bg-[#e8e4d9] dark:bg-black transition-colors duration-300">
       <Navbar />
 
-      <div className="max-w-6xl mx-auto px-4 pt-20 pb-12 sm:px-6 lg:px-8">
+      <main className="flex-grow max-w-7xl mx-auto w-full px-4 pt-8 pb-12 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center justify-between mb-8 bg-white dark:bg-[#111111] border border-[#111] dark:border-[#333] rounded-[2.5rem] shadow-[8px_8px_0px_0px_rgba(17,17,17,1)] dark:shadow-[8px_8px_0px_0px_rgba(246,202,125,0.3)] p-6 sm:p-8 transition-all duration-300">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Reimbursement Auditor</h1>
-            <p className="text-sm text-gray-500 mt-1">
+            <h1 className="text-3xl font-black text-black dark:text-white tracking-tight">Reimbursement Auditor</h1>
+            <p className="text-sm font-bold text-gray-600 dark:text-gray-400 mt-1">
               AI-powered pre-submission audit for your insurance claim
             </p>
           </div>
           <button
             onClick={() => setShowHistory(true)}
-            className="text-sm font-medium text-indigo-600 hover:text-indigo-700 px-4 py-2 rounded-lg hover:bg-indigo-50 transition cursor-pointer flex items-center gap-1.5"
+            className="text-sm font-bold text-black dark:text-black bg-white dark:bg-[#f6ca7d] border border-[#111] px-5 py-2.5 rounded-full hover:bg-[#f0eeb4] dark:hover:bg-[#ff4713] dark:hover:text-white transition cursor-pointer flex items-center gap-1.5 shadow-[2px_2px_0px_0px_rgba(17,17,17,1)]"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -235,7 +235,7 @@ export default function Reimbursement() {
             )}
           </div>
         </div>
-      </div>
+      </main>
 
       {/* History modal */}
       {showHistory && (

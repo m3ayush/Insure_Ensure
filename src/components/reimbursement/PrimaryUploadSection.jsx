@@ -37,7 +37,7 @@ export default function PrimaryUploadSection({ onFileSelect, isProcessing, uploa
   // Compact bar after upload
   if (uploadedFileName) {
     return (
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+      <div className="bg-white dark:bg-[#111111] border border-[#111] dark:border-[#333] rounded-[1.5rem] shadow-[4px_4px_0px_0px_rgba(17,17,17,1)] dark:shadow-[4px_4px_0px_0px_rgba(246,202,125,0.3)] p-5 transition-all duration-300">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
@@ -52,7 +52,7 @@ export default function PrimaryUploadSection({ onFileSelect, isProcessing, uploa
           </div>
           <button
             onClick={onStartOver}
-            className="text-sm text-gray-500 hover:text-gray-700 font-medium px-3 py-1.5 rounded-lg hover:bg-gray-100 transition cursor-pointer"
+            className="text-sm font-bold text-black dark:text-black bg-white dark:bg-[#f6ca7d] border border-[#111] px-5 py-2.5 rounded-full hover:bg-[#f0eeb4] dark:hover:bg-[#ff4713] dark:hover:text-white transition cursor-pointer shadow-[2px_2px_0px_0px_rgba(17,17,17,1)]"
           >
             Start Over
           </button>
@@ -62,9 +62,9 @@ export default function PrimaryUploadSection({ onFileSelect, isProcessing, uploa
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-      <h2 className="text-lg font-semibold text-gray-900 mb-1">Upload Discharge Summary</h2>
-      <p className="text-sm text-gray-500 mb-4">
+    <div className="bg-white dark:bg-[#111111] border border-[#111] dark:border-[#333] rounded-[1.5rem] shadow-[4px_4px_0px_0px_rgba(17,17,17,1)] dark:shadow-[4px_4px_0px_0px_rgba(246,202,125,0.3)] p-6 sm:p-8 transition-all duration-300">
+      <h2 className="text-xl font-black text-black dark:text-white mb-2 tracking-tight">Upload Discharge Summary</h2>
+      <p className="text-sm font-bold text-gray-600 dark:text-gray-400 mb-6">
         Upload your hospital discharge summary to begin the claim audit. We'll identify your insurer and check document completeness.
       </p>
 
@@ -73,12 +73,12 @@ export default function PrimaryUploadSection({ onFileSelect, isProcessing, uploa
         onDragLeave={() => setIsDragging(false)}
         onDrop={handleDrop}
         onClick={() => !isProcessing && fileInputRef.current?.click()}
-        className={`relative border-2 border-dashed rounded-xl p-10 text-center transition cursor-pointer ${
+        className={`relative border-2 border-dashed rounded-[1.5rem] p-10 text-center transition cursor-pointer ${
           isProcessing
-            ? "border-indigo-300 bg-indigo-50/50 cursor-wait"
+            ? "border-[#111] dark:border-[#f6ca7d] bg-[#f0eeb4]/20 dark:bg-[#f6ca7d]/10 cursor-wait"
             : isDragging
-              ? "border-indigo-500 bg-indigo-50"
-              : "border-gray-300 hover:border-indigo-400 hover:bg-gray-50"
+              ? "border-black dark:border-[#ff4713] bg-[#e8e4d9]/50 dark:bg-black"
+              : "border-gray-400 dark:border-gray-600 hover:border-black dark:hover:border-white hover:bg-gray-50 dark:hover:bg-[#222]"
         }`}
       >
         <input
@@ -92,20 +92,20 @@ export default function PrimaryUploadSection({ onFileSelect, isProcessing, uploa
         {isProcessing ? (
           <div className="flex flex-col items-center gap-3">
             <div className="relative">
-              <div className="w-14 h-14 rounded-full border-4 border-indigo-200 flex items-center justify-center">
-                <svg className="w-7 h-7 text-indigo-600 animate-spin" fill="none" viewBox="0 0 24 24">
+              <div className="w-14 h-14 rounded-full border-4 border-black dark:border-[#f6ca7d] flex items-center justify-center">
+                <svg className="w-7 h-7 text-black dark:text-[#f6ca7d] animate-spin" fill="none" viewBox="0 0 24 24">
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                 </svg>
               </div>
               <span className="absolute -top-1 -right-1 flex h-3 w-3">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75" />
-                <span className="relative inline-flex rounded-full h-3 w-3 bg-indigo-500" />
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-black dark:bg-[#f6ca7d] opacity-75" />
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-black dark:bg-[#ff4713]" />
               </span>
             </div>
             <div>
-              <p className="text-sm font-medium text-indigo-700">Scanning document...</p>
-              <p className="text-xs text-indigo-500 mt-1">Extracting insurer details via AI</p>
+              <p className="text-sm font-black text-black dark:text-white">Scanning document...</p>
+              <p className="text-xs font-bold text-gray-600 dark:text-gray-400 mt-1">Extracting insurer details via AI</p>
             </div>
           </div>
         ) : (
