@@ -12,9 +12,9 @@ import {
 } from "../utils/validators";
 
 const inputClass =
-  "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition";
+  "w-full px-5 py-3.5 bg-gray-50 dark:bg-slate-800 border-none rounded-2xl focus:ring-2 focus:ring-indigo-500 outline-none transition font-medium text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500";
 const errorInputClass =
-  "w-full px-4 py-2 border border-red-400 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition";
+  "w-full px-5 py-3.5 bg-red-50 dark:bg-red-900/20 border border-red-400 dark:border-red-800 rounded-2xl focus:ring-2 focus:ring-red-500 outline-none transition font-medium text-gray-900 dark:text-white";
 
 export default function SignUp() {
   const [firstName, setFirstName] = useState("");
@@ -103,12 +103,12 @@ export default function SignUp() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-100 via-white to-blue-100 py-10">
-      <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md">
-        <h1 className="text-3xl font-bold text-center text-indigo-700 mb-2">
+    <div className="min-h-screen flex items-center justify-center bg-[#fafaf9] dark:bg-[#0f172a] transition-colors duration-300 p-4 py-10">
+      <div className="bg-white dark:bg-[#1e293b] rounded-[2.5rem] border border-gray-200 dark:border-slate-700/60 shadow-xl p-8 sm:p-10 w-full max-w-md transition-all duration-300">
+        <h1 className="text-3xl font-black text-center tracking-tight text-indigo-600 dark:text-indigo-400 mb-2">
           InsureEnsure
         </h1>
-        <p className="text-center text-gray-500 mb-6">Create your account</p>
+        <p className="text-center text-gray-500 dark:text-gray-400 font-medium mb-6">Create your account</p>
 
         {formError && (
           <div className="bg-red-50 text-red-600 p-3 rounded-lg mb-4 text-sm">
@@ -235,7 +235,7 @@ export default function SignUp() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-indigo-600 text-white py-2.5 rounded-lg font-semibold hover:bg-indigo-700 transition disabled:opacity-50 cursor-pointer"
+            className="w-full bg-indigo-600 text-white py-3.5 rounded-2xl font-bold hover:bg-indigo-700 transition disabled:opacity-50 cursor-pointer mt-4"
           >
             {loading ? "Creating account..." : "Sign Up"}
           </button>

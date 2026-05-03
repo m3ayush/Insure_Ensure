@@ -4,9 +4,9 @@ import { useAuth } from "../context/AuthContext";
 import { validatePassword } from "../utils/validators";
 
 const inputClass =
-  "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition";
+  "w-full px-5 py-3.5 bg-[#e8e4d9] dark:bg-black border border-[#111] dark:border-[#333] rounded-[1.5rem] focus:ring-0 outline-none transition font-bold text-black dark:text-white placeholder-gray-500 dark:placeholder-gray-600 focus:border-black dark:focus:border-[#f6ca7d] shadow-[2px_2px_0px_0px_rgba(17,17,17,1)] dark:shadow-none";
 const errorInputClass =
-  "w-full px-4 py-2 border border-red-400 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition";
+  "w-full px-5 py-3.5 bg-[#ff4713]/10 dark:bg-[#ff4713]/10 border border-[#ff4713] dark:border-[#ff4713] rounded-[1.5rem] focus:ring-0 outline-none transition font-bold text-black dark:text-white shadow-[2px_2px_0px_0px_rgba(255,71,19,0.3)] dark:shadow-none";
 
 export default function ChangePassword() {
   const { changePassword } = useAuth();
@@ -66,12 +66,12 @@ export default function ChangePassword() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-100 via-white to-blue-100">
-      <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md">
-        <h1 className="text-2xl font-bold text-center text-indigo-700 mb-2">
+    <div className="min-h-screen flex items-center justify-center bg-[#e8e4d9] dark:bg-black transition-colors duration-300 p-4">
+      <div className="bg-white dark:bg-[#111111] rounded-[2.5rem] border border-[#111] dark:border-[#333] shadow-[8px_8px_0px_0px_rgba(17,17,17,1)] dark:shadow-[8px_8px_0px_0px_rgba(246,202,125,0.3)] p-8 sm:p-10 w-full max-w-md transition-all duration-300">
+        <h1 className="text-3xl font-black text-center tracking-tight text-black dark:text-[#f6ca7d] mb-2">
           Change Password
         </h1>
-        <p className="text-center text-gray-500 mb-6 text-sm">
+        <p className="text-center text-gray-600 dark:text-gray-400 font-bold mb-6 text-sm">
           After changing your password, you will be signed out of all devices.
         </p>
 
@@ -127,14 +127,14 @@ export default function ChangePassword() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-indigo-600 text-white py-2.5 rounded-lg font-semibold hover:bg-indigo-700 transition disabled:opacity-50 cursor-pointer"
+            className="w-full bg-black dark:bg-[#f6ca7d] text-white dark:text-black py-3.5 rounded-full font-black hover:bg-gray-800 dark:hover:bg-white transition disabled:opacity-50 cursor-pointer shadow-[2px_2px_0px_0px_rgba(17,17,17,1)] dark:shadow-none border border-transparent dark:border-[#111] mt-4 tracking-wide uppercase"
           >
             {loading ? "Updating..." : "Update Password"}
           </button>
         </form>
 
-        <p className="text-center text-sm text-gray-600 mt-6">
-          <Link to="/account" className="text-indigo-600 font-semibold hover:text-indigo-800">
+        <p className="text-center text-sm font-bold text-gray-600 dark:text-gray-400 mt-6">
+          <Link to="/account" className="text-black dark:text-[#f6ca7d] font-black hover:underline">
             Back to Account
           </Link>
         </p>
