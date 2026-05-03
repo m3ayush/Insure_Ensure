@@ -136,11 +136,13 @@ export default function DocumentChatWindow() {
   return (
     <div className="flex flex-col flex-1 min-h-0">
       {/* Disclaimer */}
-      <div className="bg-amber-50 border-b border-amber-200 px-4 py-2.5 flex-shrink-0">
-        <p className="text-xs text-amber-800 text-center">
-          <span className="font-semibold">Disclaimer:</span> Document analysis is for educational
-          purposes only. Verify all extracted information with the original document.
-        </p>
+      <div className="px-4 py-2 flex-shrink-0 flex justify-center">
+        <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/50 rounded-2xl px-4 py-2">
+          <p className="text-xs text-amber-800 dark:text-amber-200 text-center">
+            <span className="font-semibold">Disclaimer:</span> Document analysis is for educational
+            purposes only. Verify all extracted information with the original document.
+          </p>
+        </div>
       </div>
 
       {/* Document Upload Zone */}
@@ -168,7 +170,7 @@ export default function DocumentChatWindow() {
               key={q}
               onClick={() => handleSend(q)}
               disabled={isLoading}
-              className="text-xs bg-indigo-50 text-indigo-700 px-3 py-1.5 rounded-full hover:bg-indigo-100 transition cursor-pointer disabled:opacity-50"
+              className="text-xs bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-800/50 px-4 py-2 rounded-full hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition cursor-pointer disabled:opacity-50"
             >
               {q}
             </button>
@@ -177,9 +179,9 @@ export default function DocumentChatWindow() {
       )}
 
       {/* Input Bar */}
-      <div className="flex-shrink-0 border-t border-gray-200 bg-white px-4 py-3">
-        {error && <p className="text-xs text-red-500 mb-2">{error}</p>}
-        <div className="flex items-center gap-2">
+      <div className="flex-shrink-0 p-4 pt-2">
+        {error && <p className="text-xs text-red-500 mb-2 px-2">{error}</p>}
+        <div className="flex items-center gap-2 bg-gray-50 dark:bg-slate-800/50 border border-gray-200 dark:border-slate-700 p-1.5 rounded-[2rem] shadow-inner transition-colors">
           <input
             ref={inputRef}
             type="text"
@@ -189,12 +191,12 @@ export default function DocumentChatWindow() {
             placeholder={sessionId ? "Ask about your document..." : "Upload a document to start asking questions..."}
             maxLength={800}
             disabled={isLoading || !sessionId}
-            className="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition text-sm disabled:bg-gray-50"
+            className="flex-1 px-4 py-2.5 bg-transparent border-none focus:ring-0 outline-none text-sm text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 disabled:opacity-50"
           />
           <button
             onClick={() => handleSend()}
             disabled={isLoading || !input.trim() || !sessionId}
-            className="bg-indigo-600 text-white p-2.5 rounded-lg hover:bg-indigo-700 transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
+            className="bg-indigo-600 text-white p-3 rounded-full hover:bg-indigo-700 transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0 shadow-sm"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path

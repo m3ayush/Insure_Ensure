@@ -21,16 +21,16 @@ const TABS = [
 
 export default function TabSwitcher({ activeTab, onTabChange }) {
   return (
-    <div className="flex-shrink-0 bg-white border-b border-gray-200 px-4">
-      <div className="flex gap-1">
+    <div className="flex-shrink-0 flex justify-center mb-4">
+      <div className="inline-flex bg-[#e8e4d9] dark:bg-black p-1.5 rounded-full border border-[#111] dark:border-[#333] shadow-[2px_2px_0px_0px_rgba(17,17,17,1)] dark:shadow-[2px_2px_0px_0px_rgba(246,202,125,0.3)]">
         {TABS.map((tab) => (
           <button
             key={tab.id}
             onClick={() => onTabChange(tab.id)}
-            className={`flex items-center gap-1.5 px-4 py-3 text-sm font-medium transition border-b-2 cursor-pointer ${
+            className={`flex items-center gap-2 px-5 py-2.5 text-sm font-bold transition-all duration-300 rounded-full cursor-pointer ${
               activeTab === tab.id
-                ? "border-indigo-600 text-indigo-600"
-                : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                ? "bg-white dark:bg-[#111] text-black dark:text-[#f6ca7d] border border-[#111] dark:border-[#333] shadow-sm"
+                : "text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white border border-transparent hover:bg-white/50 dark:hover:bg-[#222]"
             }`}
           >
             {tab.icon}

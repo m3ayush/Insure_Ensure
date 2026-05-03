@@ -42,15 +42,15 @@ export default function ChatBubble({ role, content, timestamp }) {
   return (
     <div className={`flex ${isUser ? "justify-end" : "justify-start"} mb-3`}>
       <div
-        className={`max-w-[80%] sm:max-w-[70%] px-4 py-3 text-sm leading-relaxed ${
+        className={`max-w-[85%] sm:max-w-[75%] px-5 py-3.5 text-sm leading-relaxed border ${
           isUser
-            ? "bg-indigo-600 text-white rounded-lg rounded-br-sm"
-            : "bg-white text-gray-800 rounded-lg rounded-bl-sm shadow-sm border border-gray-100"
+            ? "bg-black text-white dark:bg-[#f6ca7d] dark:text-black rounded-[1.5rem] rounded-br-[0.5rem] border-transparent dark:border-[#111]"
+            : "bg-white text-black dark:bg-[#1a1a1a] dark:text-white rounded-[1.5rem] rounded-bl-[0.5rem] shadow-[2px_2px_0px_0px_rgba(17,17,17,1)] dark:shadow-none border-[#111] dark:border-[#333]"
         }`}
       >
-        <div className={isUser ? "" : "prose-sm"}>{isUser ? content : formatContent(content)}</div>
+        <div className={`font-bold ${isUser ? "" : "prose-sm prose-black dark:prose-invert"}`}>{isUser ? content : formatContent(content)}</div>
         {timestamp && (
-          <p className={`text-[10px] mt-1.5 ${isUser ? "text-indigo-200" : "text-gray-400"}`}>
+          <p className={`text-[10px] mt-1.5 font-bold ${isUser ? "text-gray-400 dark:text-black/60" : "text-gray-500 dark:text-gray-500"}`}>
             {formatTime(timestamp)}
           </p>
         )}

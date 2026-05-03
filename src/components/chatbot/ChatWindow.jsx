@@ -83,12 +83,14 @@ export default function ChatWindow() {
   return (
     <div className="flex flex-col flex-1 min-h-0">
       {/* Disclaimer */}
-      <div className="bg-amber-50 border-b border-amber-200 px-4 py-2.5 flex-shrink-0">
-        <p className="text-xs text-amber-800 text-center">
-          <span className="font-semibold">Disclaimer:</span> This chatbot provides general
-          insurance education only. It is not legal, financial, or medical advice. Consult a
-          licensed advisor for specific guidance.
-        </p>
+      <div className="px-4 py-2 flex-shrink-0 flex justify-center">
+        <div className="bg-[#f0eeb4] dark:bg-yellow-900/30 border border-[#111] dark:border-yellow-800/50 rounded-full px-5 py-2.5 shadow-[2px_2px_0px_0px_rgba(17,17,17,1)] dark:shadow-none">
+          <p className="text-xs text-black dark:text-[#f6ca7d] text-center font-bold">
+            <span className="font-black">Disclaimer:</span> This chatbot provides general
+            insurance education only. It is not legal, financial, or medical advice. Consult a
+            licensed advisor for specific guidance.
+          </p>
+        </div>
       </div>
 
       {/* Messages Area */}
@@ -108,7 +110,7 @@ export default function ChatWindow() {
               key={q}
               onClick={() => handleSend(q)}
               disabled={isLoading}
-              className="text-xs bg-indigo-50 text-indigo-700 px-3 py-1.5 rounded-full hover:bg-indigo-100 transition cursor-pointer disabled:opacity-50"
+              className="text-xs font-bold bg-[#e8e4d9] dark:bg-[#111] text-black dark:text-[#f6ca7d] border border-[#111] dark:border-[#333] px-5 py-2.5 rounded-full hover:bg-white dark:hover:bg-[#222] hover:-translate-y-0.5 transition-all cursor-pointer disabled:opacity-50 shadow-[2px_2px_0px_0px_rgba(17,17,17,1)] dark:shadow-[2px_2px_0px_0px_rgba(246,202,125,0.3)]"
             >
               {q}
             </button>
@@ -117,9 +119,9 @@ export default function ChatWindow() {
       )}
 
       {/* Input Bar */}
-      <div className="flex-shrink-0 border-t border-gray-200 bg-white px-4 py-3">
-        {error && <p className="text-xs text-red-500 mb-2">{error}</p>}
-        <div className="flex items-center gap-2">
+      <div className="flex-shrink-0 p-4 pt-2">
+        {error && <p className="text-xs text-red-500 mb-2 px-2">{error}</p>}
+        <div className="flex items-center gap-2 bg-white dark:bg-black/20 border border-[#111] dark:border-[#333] p-1.5 rounded-full shadow-[4px_4px_0px_0px_rgba(17,17,17,1)] dark:shadow-none transition-colors">
           <input
             ref={inputRef}
             type="text"
@@ -129,12 +131,12 @@ export default function ChatWindow() {
             placeholder="Ask about insurance..."
             maxLength={800}
             disabled={isLoading}
-            className="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition text-sm disabled:bg-gray-50"
+            className="flex-1 px-5 py-3 bg-transparent border-none focus:ring-0 outline-none text-sm font-bold text-black dark:text-white placeholder-gray-500 dark:placeholder-gray-600 disabled:opacity-50"
           />
           <button
             onClick={() => handleSend()}
             disabled={isLoading || !input.trim()}
-            className="bg-indigo-600 text-white p-2.5 rounded-lg hover:bg-indigo-700 transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
+            className="bg-black dark:bg-[#f6ca7d] text-white dark:text-black p-3.5 rounded-full hover:bg-gray-800 dark:hover:bg-white transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0 border border-transparent dark:border-[#111]"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
