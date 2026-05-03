@@ -1,140 +1,286 @@
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import Navbar from "../components/Navbar";
+import { motion } from "framer-motion";
+import { ArrowRight, ArrowDown } from "@phosphor-icons/react";
 
-const services = [
+// Use a 4K Unsplash image to prevent stretching and blurriness
+const HERO_IMAGE = "https://images.unsplash.com/photo-1542037104-5fb9e88d55d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=3000&q=100";
+
+// High-quality relevant images for sections
+const REC_IMG = "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=1200&q=80";
+const CHAT_IMG = "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=1200&q=80";
+const CLAIMS_IMG = "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=1200&q=80";
+
+const sections = [
   {
-    title: "Insurance Recommendation",
-    description: "Get personalized insurance recommendations tailored to your needs and budget.",
+    title: "Personalized Recommendation",
+    subtitle: "TAILORED COVERAGE",
+    description: "Our intelligent engine analyzes your specific needs, lifestyle, and budget to craft an insurance plan that fits perfectly. Say goodbye to one-size-fits-all policies.",
+    img: REC_IMG,
     to: "/recommendation",
-    color: "bg-[#e1d7c6] dark:bg-[#111111] border-[#111] dark:border-[#333]",
-    textHover: "group-hover:text-[#ff5d22] dark:group-hover:text-[#f6ca7d]",
-    textColor: "text-black dark:text-white",
-    descColor: "text-gray-800 dark:text-gray-400",
-    iconColor: "text-black dark:text-black bg-[#f0eeb4] dark:bg-[#f6ca7d]",
-    colSpan: "col-span-1 md:col-span-2 lg:col-span-1",
-    icon: (
-      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-      </svg>
-    ),
+    btnText: "Get Your Quote",
+    reverse: false
   },
   {
-    title: "Insurance Chatbot",
-    description: "AI-powered chatbot to help you understand policies and coverage terms.",
+    title: "Intelligent AI Advisor",
+    subtitle: "24/7 SUPPORT",
+    description: "Complex jargon decoded instantly. Our AI Advisor is trained to clarify policies, explain coverage terms, and answer your most pressing questions at any hour.",
+    img: CHAT_IMG,
     to: "/chatbot",
-    color: "bg-white dark:bg-[#ffffff] border-[#111] dark:border-[#333]",
-    textHover: "group-hover:text-[#ff5d22] dark:group-hover:text-[#ff4713]",
-    textColor: "text-black dark:text-black",
-    descColor: "text-gray-600 dark:text-gray-800",
-    iconColor: "text-white dark:text-white bg-[#ff5d22] dark:bg-[#ff4713]",
-    colSpan: "col-span-1 md:col-span-1 lg:col-span-1",
-    icon: (
-      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-      </svg>
-    ),
+    btnText: "Talk to Advisor",
+    reverse: true
   },
   {
-    title: "Reimbursement Verification",
-    description: "Upload documents and get instant verification for reimbursement claims.",
+    title: "Instant Claims Processing",
+    subtitle: "HASSLE-FREE VERIFICATION",
+    description: "Upload your documents and receive instant verification. We've eliminated the traditional waiting periods so you can get reimbursed without the anxiety.",
+    img: CLAIMS_IMG,
     to: "/reimbursement",
-    color: "bg-[#f0eeb4] dark:bg-[#ff4713] border-[#111] dark:border-[#ff4713]",
-    textHover: "group-hover:text-[#ff5d22] dark:group-hover:text-black",
-    textColor: "text-black dark:text-white",
-    descColor: "text-gray-800 dark:text-white/90",
-    iconColor: "text-white dark:text-black bg-black dark:bg-white",
-    colSpan: "col-span-1 md:col-span-1 lg:col-span-1",
-    icon: (
-      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-      </svg>
-    ),
-  },
+    btnText: "File a Claim",
+    reverse: false
+  }
 ];
 
 export default function Home() {
   const { currentUser } = useAuth();
 
   return (
-    <div className="min-h-screen bg-[#e8e4d9] dark:bg-black font-sans transition-colors duration-300 flex flex-col">
+    <div className="min-h-screen bg-zinc-50 dark:bg-[#09090b] text-zinc-900 dark:text-zinc-100 font-sans antialiased selection:bg-zinc-900 selection:text-white dark:selection:bg-white dark:selection:text-zinc-900">
+      
+      {/* Initial Page Load Overlay (Curtain Reveal) */}
+      <motion.div 
+        className="fixed inset-0 z-[100] bg-zinc-950 pointer-events-none"
+        initial={{ y: 0 }}
+        animate={{ y: "-100%" }}
+        transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+      />
+
       <Navbar />
 
-      <main className="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
-        {/* Bento Grid Container */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-min">
+      {/* Hero Section (Forma Living Style) */}
+      <section className="relative h-[100svh] w-full overflow-hidden flex flex-col justify-end">
+        {/* Full Bleed Background Image with subtle zoom on load */}
+        <motion.div 
+          className="absolute inset-0 z-0"
+          initial={{ scale: 1.1 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 2, ease: "easeOut" }}
+        >
+          <img 
+            src={HERO_IMAGE} 
+            alt="Family in field" 
+            className="w-full h-full object-cover object-center"
+          />
+          {/* Base dimming */}
+          <div className="absolute inset-0 bg-black/10"></div>
+          {/* Top dark gradient for Navbar visibility */}
+          <div className="absolute inset-x-0 top-0 h-48 bg-gradient-to-b from-black/80 to-transparent"></div>
+          {/* Bottom dark gradient for text legibility */}
+          <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/95 via-black/50 to-transparent"></div>
+        </motion.div>
+
+        {/* Bottom Content Area */}
+        <div className="relative z-10 w-full max-w-[1600px] mx-auto px-6 lg:px-12 pb-12">
           
-          {/* Hero / Greeting Box (Spans 2 columns) */}
-          <div className="col-span-1 md:col-span-2 bg-white dark:bg-[#f6ca7d] border border-[#111] dark:border-[#f6ca7d] rounded-[2.5rem] p-8 md:p-12 flex flex-col justify-center relative overflow-hidden transition-all duration-300 hover:shadow-[8px_8px_0px_0px_rgba(17,17,17,1)] dark:hover:shadow-[8px_8px_0px_0px_rgba(255,71,19,1)] hover:-translate-y-1">
-            <div className="relative z-10">
-              {currentUser?.displayName && (
-                <p className="inline-block px-4 py-1.5 rounded-full bg-[#f0eeb4] dark:bg-black text-black dark:text-white text-sm font-bold tracking-wide mb-6 border border-[#111] dark:border-black shadow-sm">
-                  Welcome back, {currentUser.displayName} 👋
-                </p>
-              )}
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-black tracking-tight leading-tight mb-6">
-                Interactive online <br className="hidden sm:block"/> insurance education <br className="hidden sm:block"/> that inspires
-              </h1>
-              <p className="text-lg sm:text-xl text-gray-700 dark:text-gray-900 max-w-xl font-medium">
-                Discover the joy of simplicity through our vibrant insurance platform, where smart tools help you understand policies, term life, and coverages.
-              </p>
-            </div>
-          </div>
-
-          {/* Quick Stat / CTA Box */}
-          <div className="col-span-1 bg-[#e1d7c6] dark:bg-[#111111] border border-[#111] dark:border-[#333] rounded-[2.5rem] p-8 flex flex-col justify-between transition-all duration-300 hover:shadow-[8px_8px_0px_0px_rgba(17,17,17,1)] dark:hover:shadow-[8px_8px_0px_0px_rgba(246,202,125,0.5)] hover:-translate-y-1">
-            <div>
-              <div className="w-14 h-14 bg-black dark:bg-[#f6ca7d] text-white dark:text-black rounded-full flex items-center justify-center mb-6">
-                <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
-              </div>
-              <h3 className="text-2xl font-black text-black dark:text-white mb-3 tracking-tight">Get Covered Fast</h3>
-              <p className="text-gray-800 dark:text-gray-400 font-medium">
-                Connect with our intelligent systems and figure out your policy in under 5 minutes.
-              </p>
-            </div>
-            <Link to="/recommendation" className="mt-8 bg-black dark:bg-white text-white dark:text-black py-3.5 px-6 rounded-full font-bold text-center hover:scale-105 transition-transform no-underline flex items-center justify-center gap-2">
-              Start Now
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
-            </Link>
-          </div>
-
-          {/* Services Section */}
-          {services.map((service) => (
-            <Link
-              key={service.to}
-              to={service.to}
-              className={`border rounded-[2.5rem] p-8 hover:shadow-[8px_8px_0px_0px_rgba(17,17,17,1)] dark:hover:shadow-[8px_8px_0px_0px_rgba(255,255,255,0.2)] hover:-translate-y-1 transition-all duration-300 no-underline group flex flex-col justify-between ${service.color} ${service.colSpan}`}
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-8">
+            <motion.div 
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+              className="max-w-4xl"
             >
-              <div>
-                <div className={`w-16 h-16 rounded-[1.25rem] flex items-center justify-center mb-6 transition-transform group-hover:scale-110 border border-[#111] dark:border-transparent ${service.iconColor}`}>
-                  {service.icon}
+              {currentUser?.displayName && (
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/10 text-white text-[10px] font-semibold tracking-widest uppercase mb-6">
+                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></div>
+                  Welcome back, {currentUser.displayName}
                 </div>
-                <h3 className={`text-2xl font-black mb-3 tracking-tight transition-colors ${service.textColor} ${service.textHover}`}>
-                  {service.title}
-                </h3>
-                <p className={`font-medium leading-relaxed ${service.descColor}`}>
-                  {service.description}
-                </p>
-              </div>
-              <div className={`mt-8 font-bold text-sm flex items-center gap-2 group-hover:gap-3 transition-all ${service.textColor}`}>
-                Explore Tool
-                <div className="w-8 h-8 rounded-full bg-transparent border border-current flex items-center justify-center">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </div>
-              </div>
-            </Link>
-          ))}
+              )}
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-[5rem] font-bold tracking-tighter leading-[1.05] text-white drop-shadow-md">
+                Coverage that <br className="hidden sm:block" /> moves with you.
+              </h1>
+            </motion.div>
+            
+            <motion.div 
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
+              className="max-w-sm md:text-right"
+            >
+              <p className="text-sm md:text-base text-white/80 font-medium leading-relaxed drop-shadow-md">
+                Each policy is precision-built for your specific lifestyle, ensuring higher quality and consistency than traditional insurance models.
+              </p>
+            </motion.div>
+          </div>
 
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1, duration: 1 }}
+            className="flex items-center justify-between border-t border-white/20 pt-6 text-white/60 text-[10px] font-bold tracking-widest uppercase"
+          >
+            <span>Your Trusted Partner</span>
+            <div className="flex items-center gap-2">
+              <span>Scroll to explore</span>
+              <ArrowDown weight="bold" size={14} className="animate-bounce" />
+            </div>
+          </motion.div>
         </div>
-      </main>
+      </section>
+
+      {/* Horizontal Stacked Sections */}
+      <div className="flex flex-col gap-12 md:gap-24 py-24 md:py-32">
+        {sections.map((data, index) => (
+          <section 
+            key={index} 
+            className="px-6 lg:px-12 w-full max-w-[1600px] mx-auto flex flex-col md:flex-row items-center gap-12 lg:gap-24 overflow-hidden"
+          >
+            {data.reverse ? (
+              <>
+                <div className="w-full md:w-1/2 flex md:justify-end order-2 md:order-1">
+                  <div className="max-w-lg">
+                    <motion.span 
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: false, margin: "-50px" }}
+                      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                      className="text-xs sm:text-sm font-bold tracking-widest text-zinc-500 uppercase mb-4 block"
+                    >
+                      {data.subtitle}
+                    </motion.span>
+                    <motion.h2 
+                      initial={{ opacity: 0, y: 30 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: false, margin: "-50px" }}
+                      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                      className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tighter text-zinc-950 dark:text-white mb-6 leading-[1.05]"
+                    >
+                      {data.title}
+                    </motion.h2>
+                    <motion.p 
+                      initial={{ opacity: 0, y: 30 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: false, margin: "-50px" }}
+                      transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+                      className="text-base sm:text-lg text-zinc-600 dark:text-zinc-400 mb-10 leading-relaxed font-medium"
+                    >
+                      {data.description}
+                    </motion.p>
+                    <motion.div
+                      initial={{ opacity: 0, y: 30 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: false, margin: "-50px" }}
+                      transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                    >
+                      <Link to={data.to} className="inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-zinc-950 dark:bg-zinc-100 text-white dark:text-zinc-950 rounded-full text-sm sm:text-base font-semibold transition-all hover:scale-[1.02] active:scale-[0.98]">
+                        {data.btnText}
+                        <ArrowRight weight="bold" size={16} />
+                      </Link>
+                    </motion.div>
+                  </div>
+                </div>
+                <div className="w-full md:w-1/2 order-1 md:order-2">
+                  <motion.div 
+                    initial={{ opacity: 0, scale: 0.95, y: 40 }}
+                    whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                    transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+                    viewport={{ once: false, margin: "-50px" }}
+                    className="relative w-full aspect-[4/3] rounded-[2.5rem] overflow-hidden bg-zinc-200 dark:bg-zinc-800"
+                  >
+                    <img src={data.img} alt={data.title} className="w-full h-full object-cover" />
+                  </motion.div>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="w-full md:w-1/2">
+                  <motion.div 
+                    initial={{ opacity: 0, scale: 0.95, y: 40 }}
+                    whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                    transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+                    viewport={{ once: false, margin: "-50px" }}
+                    className="relative w-full aspect-[4/3] rounded-[2.5rem] overflow-hidden bg-zinc-200 dark:bg-zinc-800"
+                  >
+                    <img src={data.img} alt={data.title} className="w-full h-full object-cover" />
+                  </motion.div>
+                </div>
+                <div className="w-full md:w-1/2 flex justify-start">
+                  <div className="max-w-lg">
+                    <motion.span 
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: false, margin: "-50px" }}
+                      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                      className="text-xs sm:text-sm font-bold tracking-widest text-zinc-500 uppercase mb-4 block"
+                    >
+                      {data.subtitle}
+                    </motion.span>
+                    <motion.h2 
+                      initial={{ opacity: 0, y: 30 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: false, margin: "-50px" }}
+                      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                      className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tighter text-zinc-950 dark:text-white mb-6 leading-[1.05]"
+                    >
+                      {data.title}
+                    </motion.h2>
+                    <motion.p 
+                      initial={{ opacity: 0, y: 30 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: false, margin: "-50px" }}
+                      transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+                      className="text-base sm:text-lg text-zinc-600 dark:text-zinc-400 mb-10 leading-relaxed font-medium"
+                    >
+                      {data.description}
+                    </motion.p>
+                    <motion.div
+                      initial={{ opacity: 0, y: 30 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: false, margin: "-50px" }}
+                      transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                    >
+                      <Link to={data.to} className="inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-zinc-950 dark:bg-zinc-100 text-white dark:text-zinc-950 rounded-full text-sm sm:text-base font-semibold transition-all hover:scale-[1.02] active:scale-[0.98]">
+                        {data.btnText}
+                        <ArrowRight weight="bold" size={16} />
+                      </Link>
+                    </motion.div>
+                  </div>
+                </div>
+              </>
+            )}
+          </section>
+        ))}
+      </div>
+
+      {/* About Section */}
+      <section className="py-24 md:py-32 bg-zinc-950 text-white px-6 lg:px-12 w-full">
+        <motion.div 
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          viewport={{ once: false }}
+          className="max-w-4xl mx-auto text-center"
+        >
+          <span className="text-xs sm:text-sm font-bold tracking-widest text-zinc-400 uppercase mb-6 block">About InsureEnsure</span>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tighter mb-8 leading-[1.1]">
+            We design policies guided by your vision, bringing together thoughtful coverage, collaboration, and creativity.
+          </h2>
+          <p className="text-lg md:text-xl text-zinc-400 font-medium leading-relaxed max-w-2xl mx-auto">
+            By eliminating outdated bureaucracy and leveraging intelligent systems, we ensure that your insurance works seamlessly for how you actually live.
+          </p>
+        </motion.div>
+      </section>
 
       {/* Footer */}
-      <footer className="mt-8 py-8 text-center text-sm font-bold text-gray-500 dark:text-gray-600 border-t border-[#111] dark:border-[#333] max-w-7xl mx-auto w-full px-4">
-        <p>&copy; 2026 InsureEnsure. All rights reserved.</p>
+      <footer className="py-12 px-6 lg:px-12 bg-zinc-950 border-t border-white/10 w-full text-white">
+        <div className="max-w-[1600px] mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="text-xl font-bold tracking-tighter">
+            InsureEnsure
+          </div>
+          <p className="text-sm font-medium text-zinc-500">
+            &copy; 2026 InsureEnsure. Designed with precision.
+          </p>
+        </div>
       </footer>
     </div>
   );

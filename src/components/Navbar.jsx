@@ -1,15 +1,26 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
+import { motion, AnimatePresence } from "framer-motion";
+import { Moon, Sun, List, X, SignOut } from "@phosphor-icons/react";
 
 export default function Navbar() {
   const { logout, currentUser } = useAuth();
   const { isDark, toggleTheme } = useTheme();
   const navigate = useNavigate();
+  const location = useLocation();
+  const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+
   const isUnverified = currentUser && !currentUser.emailVerified &&
     !currentUser.providerData?.some((p) => p.providerId === "google.com");
-  const [menuOpen, setMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 40);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   async function handleLogout() {
     await logout();
@@ -17,128 +28,147 @@ export default function Navbar() {
   }
 
   const navLinks = [
-    { to: "/recommendation", label: "Recommendation" },
-    { to: "/chatbot", label: "Chatbot" },
-    { to: "/reimbursement", label: "Reimbursement" },
-    { to: "/account", label: "Account" },
+    { to: "/recommendation", label: "Recommend" },
+    { to: "/chatbot", label: "Advisor" },
+    { to: "/reimbursement", label: "Claims" },
   ];
+
+  const springConfig = { type: "spring", stiffness: 300, damping: 20 };
 
   return (
     <>
-      {isUnverified && (
-        <div className="bg-amber-100 dark:bg-amber-900/40 border-b border-amber-200 dark:border-amber-800 text-center py-2 px-4 text-sm text-amber-800 dark:text-amber-200">
-          Your email is not verified.{" "}
-          <Link to="/account" className="font-semibold underline hover:text-amber-900 dark:hover:text-amber-100">
-            Resend verification email
-          </Link>
-        </div>
-      )}
-      <div className="px-4 pt-4 sm:px-6 lg:px-8 z-50 sticky top-0 mb-4">
-        <nav className="bg-[#e8e4d9]/90 dark:bg-[#111111]/90 backdrop-blur-md shadow-[4px_4px_0px_0px_rgba(17,17,17,1)] dark:shadow-[4px_4px_0px_0px_rgba(246,202,125,0.3)] border border-[#111] dark:border-[#333] rounded-[2rem] max-w-7xl mx-auto px-6 py-3 transition-all duration-300">
-          <div className="flex justify-between items-center h-12">
-            <Link
-              to="/home"
-              className="flex items-center gap-2 group no-underline"
-            >
-              <div className="w-10 h-10 bg-black dark:bg-[#f6ca7d] text-white dark:text-black rounded-full flex items-center justify-center font-black text-xl tracking-tighter group-hover:-rotate-12 transition-transform duration-300 border border-transparent dark:border-[#111]">
-                IE
-              </div>
-              <span className="text-xl font-black text-black dark:text-white tracking-tight hidden sm:block">
-                InsureEnsure
-              </span>
+      <AnimatePresence>
+        {isUnverified && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            className="bg-zinc-900 dark:bg-zinc-100 text-zinc-100 dark:text-zinc-900 text-center py-2.5 px-4 text-xs font-medium tracking-wide flex justify-center items-center relative z-50"
+          >
+            Your email is unverified.{" "}
+            <Link to="/account" className="ml-2 font-bold underline decoration-zinc-500 hover:decoration-current transition-colors">
+              Resend verification
             </Link>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-            {/* Desktop nav */}
-            <div className="hidden md:flex items-center gap-2 bg-white dark:bg-black rounded-full p-1.5 border border-[#111] dark:border-[#333]">
+      <motion.header
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={springConfig}
+        className="fixed top-6 left-0 right-0 z-50 flex justify-center px-4 pointer-events-none"
+      >
+        <div className={`pointer-events-auto flex items-center justify-between transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${scrolled ? "w-full max-w-5xl rounded-[2rem] bg-white/70 dark:bg-zinc-950/70 backdrop-blur-xl border border-zinc-200/50 dark:border-zinc-800/50 shadow-[inset_0_1px_0_rgba(255,255,255,0.2),0_8px_32px_-12px_rgba(0,0,0,0.1)] px-6 py-3" : "w-full max-w-[1400px] px-6 py-4"}`}>
+          
+          <Link to="/home" className="flex items-center gap-2 outline-none focus-visible:ring-2 focus-visible:ring-zinc-900 rounded-lg group">
+            <div className="w-8 h-8 bg-zinc-950 dark:bg-zinc-100 rounded-full flex items-center justify-center text-white dark:text-zinc-950 font-black text-sm tracking-tighter transition-transform group-hover:scale-[0.98] group-active:scale-90">
+              IE
+            </div>
+            <span className="text-xl font-bold tracking-tighter text-zinc-950 dark:text-zinc-100 hidden sm:block">
+              InsureEnsure
+            </span>
+          </Link>
+
+          {/* Desktop Nav */}
+          <div className="hidden md:flex items-center gap-1 bg-zinc-100/50 dark:bg-zinc-900/50 p-1.5 rounded-full border border-zinc-200/50 dark:border-zinc-800/50 backdrop-blur-md">
+            {navLinks.map((link) => {
+              const isActive = location.pathname === link.to;
+              return (
+                <Link
+                  key={link.to}
+                  to={link.to}
+                  className="relative px-5 py-2 rounded-full text-sm font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-zinc-900 text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-zinc-100"
+                >
+                  {isActive && (
+                    <motion.div
+                      layoutId="navIndicator"
+                      className="absolute inset-0 bg-white dark:bg-zinc-800 rounded-full shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] border border-zinc-200/50 dark:border-zinc-700/50"
+                      transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                    />
+                  )}
+                  <span className="relative z-10">{link.label}</span>
+                </Link>
+              );
+            })}
+          </div>
+
+          <div className="hidden md:flex items-center gap-3">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={toggleTheme}
+              className="w-10 h-10 rounded-full flex items-center justify-center text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors"
+            >
+              {isDark ? <Sun weight="bold" size={18} /> : <Moon weight="bold" size={18} />}
+            </motion.button>
+
+            {currentUser && (
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={handleLogout}
+                className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-zinc-950 dark:bg-zinc-100 text-zinc-100 dark:text-zinc-950 text-sm font-semibold shadow-[0_4px_12px_-4px_rgba(0,0,0,0.2)] hover:shadow-[0_8px_20px_-6px_rgba(0,0,0,0.2)] transition-shadow"
+              >
+                Sign Out
+              </motion.button>
+            )}
+          </div>
+
+          {/* Mobile Menu Toggle */}
+          <div className="md:hidden flex items-center gap-2">
+            <button
+              onClick={toggleTheme}
+              className="w-10 h-10 rounded-full flex items-center justify-center text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-900"
+            >
+              {isDark ? <Sun weight="bold" size={18} /> : <Moon weight="bold" size={18} />}
+            </button>
+            <motion.button
+              whileTap={{ scale: 0.9 }}
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="w-10 h-10 rounded-full bg-zinc-100 dark:bg-zinc-900 flex items-center justify-center text-zinc-950 dark:text-zinc-100"
+            >
+              {menuOpen ? <X weight="bold" size={18} /> : <List weight="bold" size={18} />}
+            </motion.button>
+          </div>
+        </div>
+      </motion.header>
+
+      {/* Mobile Menu Overlay */}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={springConfig}
+            className="fixed inset-x-4 top-24 z-40 md:hidden bg-white/90 dark:bg-zinc-950/90 backdrop-blur-2xl border border-zinc-200/50 dark:border-zinc-800/50 rounded-[2rem] p-4 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)]"
+          >
+            <div className="flex flex-col gap-2">
               {navLinks.map((link) => (
                 <Link
                   key={link.to}
                   to={link.to}
-                  className="px-5 py-2 rounded-full text-sm font-bold transition-all duration-300 no-underline text-gray-700 dark:text-gray-400 hover:text-black dark:hover:text-white hover:bg-[#f0eeb4] dark:hover:bg-[#ff4713]"
+                  onClick={() => setMenuOpen(false)}
+                  className="px-6 py-4 text-base font-semibold text-zinc-950 dark:text-zinc-100 bg-zinc-50 dark:bg-zinc-900/50 hover:bg-zinc-100 dark:hover:bg-zinc-900 rounded-2xl transition-colors"
                 >
                   {link.label}
                 </Link>
               ))}
-            </div>
-
-            <div className="hidden md:flex items-center gap-3">
-              {/* Theme Toggle */}
+              <div className="h-px w-full bg-zinc-200 dark:bg-zinc-800 my-2" />
               <button
-                onClick={toggleTheme}
-                className="p-2.5 rounded-full bg-white dark:bg-[#111] text-black dark:text-white border border-[#111] dark:border-[#333] hover:bg-[#f0eeb4] dark:hover:bg-[#222] transition-colors cursor-pointer"
-                aria-label="Toggle Dark Mode"
+                onClick={() => {
+                  setMenuOpen(false);
+                  handleLogout();
+                }}
+                className="flex items-center justify-center gap-2 px-6 py-4 w-full bg-zinc-950 dark:bg-zinc-100 text-zinc-100 dark:text-zinc-950 rounded-2xl font-semibold"
               >
-                {isDark ? (
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-                  </svg>
-                ) : (
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-                  </svg>
-                )}
-              </button>
-
-              <button
-                onClick={handleLogout}
-                className="bg-black dark:bg-[#f6ca7d] hover:bg-gray-800 dark:hover:bg-white text-white dark:text-black px-6 py-2.5 rounded-full text-sm font-bold transition-all transform hover:-translate-y-0.5 cursor-pointer border border-transparent dark:border-[#111]"
-              >
-                Sign Out
+                Sign Out <SignOut weight="bold" size={18} />
               </button>
             </div>
-
-            {/* Mobile controls */}
-            <div className="md:hidden flex items-center gap-3">
-              <button
-                onClick={toggleTheme}
-                className="p-2.5 rounded-full bg-white dark:bg-[#111] text-black dark:text-white border border-[#111] dark:border-[#333]"
-              >
-                {isDark ? (
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-                  </svg>
-                ) : (
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-                  </svg>
-                )}
-              </button>
-              <button
-                onClick={() => setMenuOpen(!menuOpen)}
-                className="text-gray-600 dark:text-gray-300 cursor-pointer p-2"
-              >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  {menuOpen ? (
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  ) : (
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                  )}
-                </svg>
-              </button>
-            </div>
-          </div>
-
-          <div className="md:hidden mt-4 pt-4 border-t border-[#111] dark:border-[#333] space-y-2 pb-2">
-            {navLinks.map((link) => (
-              <Link
-                key={link.to}
-                to={link.to}
-                onClick={() => setMenuOpen(false)}
-                className="block px-4 py-3 text-black dark:text-white hover:bg-[#f0eeb4] dark:hover:bg-[#ff4713] rounded-2xl font-bold no-underline transition-colors"
-              >
-                {link.label}
-              </Link>
-            ))}
-            <button
-              onClick={handleLogout}
-              className="w-full text-left px-4 py-3 text-red-600 dark:text-[#ff4713] hover:bg-red-50 dark:hover:bg-red-900/20 rounded-2xl font-bold cursor-pointer transition-colors"
-            >
-              Sign Out
-            </button>
-          </div>
-
-        </nav>
-      </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }
